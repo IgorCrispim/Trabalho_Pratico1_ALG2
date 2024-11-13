@@ -79,7 +79,7 @@ class PrefixTrie:
 
 
 
-with open("test.txt", "r") as file:
+with open("test.txt", "r", encoding="utf-8") as file:
     text = file.read()
 
 # Testes com a árvore de prefixo
