@@ -78,24 +78,26 @@ class PrefixTrie:
             self._display_recursive(child_node, prefix + char)
 
 
-text = "banana bobora nabat"
-print("\ntestes dos prefixos\n")
+
+with open("entrada.txt", "r") as file:
+    text = file.read()
+
+# Testes com a árvore de prefixo
+print("\nTestes dos prefixos\n")
 prefix_trie = PrefixTrie(text)
 prefix_trie.display()
-print(prefix_trie.search("ban"))  
-print(prefix_trie.search("bob"))  
-print(prefix_trie.search("nab"))  
-print(prefix_trie.search("bat"))  
-print(prefix_trie.search("ora"))
+print(prefix_trie.search("Incredible"))  
+print(prefix_trie.search("Incr"))  
+print(prefix_trie.search("ble"))  
+print(prefix_trie.search("2019"))  
+print(prefix_trie.search("Michigan"))
 
-print("\nteste dos prefixos\n")
-print("")
+# Testes com a árvore de sufixo
+print("\nTestes dos sufixos\n")
 suffix_trie = SuffixTrie(text)
 suffix_trie.display()
-print(suffix_trie.search("ana"))  
-print(suffix_trie.search("bat"))  
-print(suffix_trie.search("ora")) 
-print(suffix_trie.search("obora"))
-print(suffix_trie.search("otra"))  
-
-
+print(suffix_trie.search("Incredible"))  
+print(suffix_trie.search("Incr"))  
+print(suffix_trie.search("ble")) 
+print(suffix_trie.search("2019"))
+print(suffix_trie.search("Michigan"))
