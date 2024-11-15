@@ -1,71 +1,113 @@
 import sys
 
-def inicializaDicionario():
+def inicializaDicionario(tamanho):
     dicionario = {}
     for i in range(256):
-        dicionario[chr(i)] = format(i, '012b')
+        dicionario[chr(i)] = format(i, tamanho)
     return dicionario
 
-def inicializaDicionarioInverso():
+def inicializaDicionarioInverso(tamanho):
     dicionario = {}
     for i in range(256):
-        dicionario[format(i, '012b')] = chr(i)
+        dicionario[format(i, tamanho)] = chr(i)
     return dicionario   
 
-def compressaoFixa(entrada):
-    dicionario = inicializaDicionario()
+def compressao(entrada,bitsMaximo,variavel):
+    
+    if variavel:
+        tamanhoAtual = 8
+    else:
+        tamanhoAtual = 12
+        
+    dicionario = inicializaDicionario(f'0{tamanhoAtual}b')
     posicao = 256
     StringProvisoria = entrada[0]
-    resultado = []
+    resultado = ""
+
     for caractere in entrada[1:]:
         if (StringProvisoria + caractere) in dicionario:
             StringProvisoria += caractere
         else:
-            #Verificar se a entrada está muito grande
-            dicionario[StringProvisoria+caractere] = format(posicao, '012b')
+            tamanhoAnterior = tamanhoAtual
+            if posicao == (2 ** tamanhoAtual):
+                if tamanhoAtual < bitsMaximo:
+                    tamanhoAtual += 1
+                else:
+                    dicionario.clear()
+                    dicionario = inicializaDicionario(f'0{tamanhoAtual}b')
+                    posicao = 256
+                    tamanhoAtual = 8
+                    print(bitsMaximo)
+            
+            dicionario[StringProvisoria+caractere] = format(posicao, f'0{tamanhoAtual}b')
             posicao+=1
-            resultado.append(dicionario[StringProvisoria])
+            resultado += dicionario[StringProvisoria].zfill(tamanhoAnterior)
             StringProvisoria = caractere
-    resultado.append(dicionario[StringProvisoria])
+    resultado += dicionario[StringProvisoria].zfill(tamanhoAtual)
     return resultado    
 
-def descompressaoFixa(comprimido):
-    dicionario = inicializaDicionarioInverso()
-    posicao = 256
-    StringProvisoria = dicionario[comprimido[0]]
-    StringSaida = StringProvisoria
+def descompressao(comprimido,bitsMaximo,variavel):
+    if variavel:
+        tamanhoAtual = 8
+    else:
+        tamanhoAtual = 12
     
-    for codigo in comprimido[1:]:
+    dicionario = inicializaDicionarioInverso(f'0{tamanhoAtual}b')
+    posicao = 256
+    StringProvisoria = dicionario[comprimido[0:0+tamanhoAtual]]
+    StringSaida = StringProvisoria
+    inicio = tamanhoAtual 
+    
+    while inicio < len(comprimido):
+        if posicao == (2 ** tamanhoAtual):
+            if tamanhoAtual < bitsMaximo:
+                tamanhoAtual += 1
+            else:
+                dicionario.clear()
+                dicionario = inicializaDicionarioInverso(f'0{tamanhoAtual}b')
+                posicao = 256
+        codigo = comprimido[inicio:inicio+tamanhoAtual]
+        
         entrada = ""
-        if codigo in dicionario:
-            entrada = dicionario[codigo]
-        else:
-            entrada = StringProvisoria + StringProvisoria[0]
+        while (len(codigo) >= 8): #Provisorio, na Trie provavelmente existe jeitos melhores
+            if codigo in dicionario:
+                entrada = dicionario[codigo]
+                break
+            else:
+                entrada = StringProvisoria + StringProvisoria[0]
+                if (codigo[0] == '0'):
+                    codigo = codigo[1:]
+                else:
+                    break
         StringSaida+=entrada
-        dicionario[format(posicao, '012b')] = StringProvisoria + entrada[0]
-        #Verificar se a posição ultrapassou o tamanho máximo
+        
+        dicionario[format(posicao, f'0{tamanhoAtual}b')] = StringProvisoria + entrada[0]
         posicao+=1
         StringProvisoria = entrada
+        inicio += tamanhoAtual
     return StringSaida
-
 
 entrada = sys.argv[1]      
 
 arquivo = open(entrada)
-texto = arquivo.read()
+texto = arquivo.read() 
+bitsMaximo = int(sys.argv[2])   
 
-bitsVariado = sys.argv[2]     
+if bitsMaximo is None:
+    bitsMaximo = 12
+    
+variavel = True
 
-if bitsVariado is None:
-    bitsVariado = 12
+comprimido = compressao(texto,bitsMaximo,variavel)
 
-#Implementar versão de tamanho fixo e tamanho variável
+print(f"Memória usada pelo original: {sys.getsizeof(texto)} bytes")
 
-comprimido = compressaoFixa(texto)
-descomprimido = descompressaoFixa(comprimido)
+print(f"Memória usada pelo comprimido: {sys.getsizeof(comprimido)} bytes")
 
-print(texto == descomprimido)
+descomprimido = descompressao(comprimido,bitsMaximo,variavel)
 
+print(descomprimido == texto)
+    
 arquivo.close()
 
 #Você também deverá implementar uma opção de teste em que o programa
@@ -73,4 +115,3 @@ arquivo.close()
 #a taxa de compressão ao longo do processamento dos arquivos, tamanho do dicionário
 #(número de elementos armazenados e espaço em memória), tempo total de execução,
 #e outras estatísticas que você julgar importantes. 
-
