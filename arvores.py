@@ -64,16 +64,14 @@ class PrefixTrie:
             self._remove_invalid_nodes_recursive(child_node)
 
 
-# Testando com arquivo "test.txt"
 with open("test.txt", "r", encoding="utf-8") as file:
     text = file.read()
 
-# Testes com a árvore de prefixo
-print("\nTestes dos prefixos\n")
 prefix_trie = PrefixTrie(text)
 
 # Exibição antes da remoção
 prefix_trie.display_ascii()
+prefix_trie.display_text()
 
 # Remover nós fora do intervalo ASCII válido
 prefix_trie.remove_invalid_nodes()
