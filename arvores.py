@@ -31,7 +31,7 @@ class PrefixTrie:
 
     # Método para exibir a árvore em ASCII
     def display_ascii(self):
-        print("Exibição em ASCII:")
+        print("\nExibição em ASCII:\n")
         self._display_recursive_ascii(self.root, [])
 
     def _display_recursive_ascii(self, node, prefix):
@@ -42,7 +42,7 @@ class PrefixTrie:
 
     # Método para exibir a árvore traduzida para texto
     def display_text(self):
-        print("Exibição traduzida para texto:")
+        print("\nExibição traduzida para texto:\n")
         self._display_recursive_text(self.root, "")
 
     def _display_recursive_text(self, node, prefix):
@@ -51,7 +51,20 @@ class PrefixTrie:
         for ascii_val, child_node in node.children.items():
             self._display_recursive_text(child_node, prefix + chr(ascii_val))
 
+    # Método para remover nós fora do intervalo ASCII válido
+    def remove_invalid_nodes(self):
+        print("\nRemovendo nós inválidos...")
+        self._remove_invalid_nodes_recursive(self.root)
 
+    def _remove_invalid_nodes_recursive(self, node):
+        invalid_keys = [ascii_val for ascii_val in node.children if ascii_val < 0 or ascii_val > 255]
+        for key in invalid_keys:
+            del node.children[key]  
+        for child_node in node.children.values():
+            self._remove_invalid_nodes_recursive(child_node)
+
+
+# Testando com arquivo "test.txt"
 with open("test.txt", "r", encoding="utf-8") as file:
     text = file.read()
 
@@ -59,14 +72,18 @@ with open("test.txt", "r", encoding="utf-8") as file:
 print("\nTestes dos prefixos\n")
 prefix_trie = PrefixTrie(text)
 
-# Exibição em ASCII
+# Exibição antes da remoção
 prefix_trie.display_ascii()
 
-# Exibição traduzida para texto
+# Remover nós fora do intervalo ASCII válido
+prefix_trie.remove_invalid_nodes()
+
+# Exibição após a remoção
+prefix_trie.display_ascii()
 prefix_trie.display_text()
 
 # Testando buscas
-print("\nResultados das buscas:")
+print("\nResultados das buscas:\n")
 print(prefix_trie.search("Oi"))
 print(prefix_trie.search("Oi "))
 print(prefix_trie.search("Oi  "))  
