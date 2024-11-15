@@ -3,6 +3,7 @@ class PrefixTrieNode:
     def __init__(self):
         self.children = {}
         self.is_end_of_prefix = False
+        self.prefix = "" 
 
 # Definição da árvore de prefixo
 class PrefixTrie:
@@ -13,12 +14,17 @@ class PrefixTrie:
 
     def insert_prefix(self, prefix):
         node = self.root
+        index = None  
         for char in prefix:
             ascii_val = ord(char)
             if ascii_val not in node.children:
                 node.children[ascii_val] = PrefixTrieNode()
             node = node.children[ascii_val]
+            if node.prefix == "" and node.is_end_of_prefix: 
+                index = ascii_val  
+            node.prefix = prefix[:len(node.prefix)+1]  
         node.is_end_of_prefix = True
+        return index  
 
     def search(self, pattern):
         node = self.root
@@ -29,7 +35,6 @@ class PrefixTrie:
             node = node.children[ascii_val]
         return node.is_end_of_prefix
 
-    # Método para exibir a árvore em ASCII
     def display_ascii(self):
         print("\nExibição em ASCII:\n")
         self._display_recursive_ascii(self.root, [])
@@ -40,7 +45,6 @@ class PrefixTrie:
         for ascii_val, child_node in node.children.items():
             self._display_recursive_ascii(child_node, prefix + [ascii_val])
 
-    # Método para exibir a árvore traduzida para texto
     def display_text(self):
         print("\nExibição traduzida para texto:\n")
         self._display_recursive_text(self.root, "")
@@ -51,7 +55,6 @@ class PrefixTrie:
         for ascii_val, child_node in node.children.items():
             self._display_recursive_text(child_node, prefix + chr(ascii_val))
 
-    # Método para remover nós fora do intervalo ASCII válido
     def remove_invalid_nodes(self):
         print("\nRemovendo nós inválidos...")
         self._remove_invalid_nodes_recursive(self.root)
@@ -63,7 +66,7 @@ class PrefixTrie:
         for child_node in node.children.values():
             self._remove_invalid_nodes_recursive(child_node)
 
-
+# Teste com texto
 with open("test.txt", "r", encoding="utf-8") as file:
     text = file.read()
 
@@ -90,3 +93,4 @@ print(prefix_trie.search("Oi sou um teste, será que funcionou?"))
 print(prefix_trie.search("2019"))  
 print(prefix_trie.search("Michigan"))
 print(prefix_trie.search("The Incredible"))
+
