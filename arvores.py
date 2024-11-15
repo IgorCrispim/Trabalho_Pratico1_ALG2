@@ -1,9 +1,10 @@
-#Definição dos nós sufixo
+# Definição dos nós sufixo
 class SuffixTrieNode:
     def __init__(self):
         self.children = {}
         self.is_end_of_suffix = False
-#Definição da arvore de sufixo 
+
+# Definição da árvore de sufixo
 class SuffixTrie:
     def __init__(self, text):
         self.root = SuffixTrieNode()
@@ -15,27 +16,29 @@ class SuffixTrie:
     def insert_suffix(self, suffix):
         node = self.root
         for char in suffix:
-            if char not in node.children:
-                node.children[char] = SuffixTrieNode()
-            node = node.children[char]
+            ascii_val = ord(char)  
+            if ascii_val not in node.children:
+                node.children[ascii_val] = SuffixTrieNode()
+            node = node.children[ascii_val]
         node.is_end_of_suffix = True
 
     def search(self, pattern):
         node = self.root
         for char in pattern:
-            if char not in node.children:
+            ascii_val = ord(char)
+            if ascii_val not in node.children:
                 return False
-            node = node.children[char]
+            node = node.children[ascii_val]
         return node.is_end_of_suffix
 
     def display(self):
-        self._display_recursive(self.root, "")
+        self._display_recursive(self.root, [])
 
     def _display_recursive(self, node, prefix):
         if node.is_end_of_suffix:
-            print(prefix)
-        for char, child_node in node.children.items():
-            self._display_recursive(child_node, prefix + char)
+            print(" ".join(map(str, prefix)))  
+        for ascii_val, child_node in node.children.items():
+            self._display_recursive(child_node, prefix + [ascii_val])  
 
 # Definição dos nós prefixo
 class PrefixTrieNode:
@@ -55,35 +58,36 @@ class PrefixTrie:
     def insert_prefix(self, prefix):
         node = self.root
         for char in prefix:
-            if char not in node.children:
-                node.children[char] = PrefixTrieNode()
-            node = node.children[char]
+            ascii_val = ord(char)
+            if ascii_val not in node.children:
+                node.children[ascii_val] = PrefixTrieNode()
+            node = node.children[ascii_val]
         node.is_end_of_prefix = True
 
     def search(self, pattern):
         node = self.root
         for char in pattern:
-            if char not in node.children:
+            ascii_val = ord(char)
+            if ascii_val not in node.children:
                 return False
-            node = node.children[char]
+            node = node.children[ascii_val]
         return node.is_end_of_prefix
 
     def display(self):
-        self._display_recursive(self.root, "")
+        self._display_recursive(self.root, [])
 
     def _display_recursive(self, node, prefix):
         if node.is_end_of_prefix:
-            print(prefix)
-        for char, child_node in node.children.items():
-            self._display_recursive(child_node, prefix + char)
-
+            print(" ".join(map(str, prefix))) 
+        for ascii_val, child_node in node.children.items():
+            self._display_recursive(child_node, prefix + [ascii_val])
 
 
 with open("test.txt", "r", encoding="utf-8") as file:
     text = file.read()
 
 # Testes com a árvore de prefixo
-print("\nTestes dos prefixos\n")
+print("\nTestes dos prefixos (em ASCII)\n")
 prefix_trie = PrefixTrie(text)
 prefix_trie.display()
 print(prefix_trie.search("Incredible"))  
@@ -93,7 +97,7 @@ print(prefix_trie.search("2019"))
 print(prefix_trie.search("Michigan"))
 
 # Testes com a árvore de sufixo
-print("\nTestes dos sufixos\n")
+print("\nTestes dos sufixos (em ASCII)\n")
 suffix_trie = SuffixTrie(text)
 suffix_trie.display()
 print(suffix_trie.search("Incredible"))  
