@@ -1,102 +1,157 @@
 import sys
+from arvores import PrefixTrie
 
-def inicializaDicionario(tamanho):
+def inicializaDicionario(arvore):
     dicionario = {}
     for i in range(256):
-        dicionario[chr(i)] = format(i, tamanho)
+        dicionario[chr(i)] = i
+        arvore.insert_prefix(chr(i))
     return dicionario
 
-def inicializaDicionarioInverso(tamanho):
+def inicializaDicionarioInverso(arvore):
     dicionario = {}
     for i in range(256):
-        dicionario[format(i, tamanho)] = chr(i)
+        dicionario[i] = chr(i)
+        #arvore.insert_prefix(i)
     return dicionario   
 
 def compressao(entrada,bitsMaximo,variavel):
-    
+    arvore = PrefixTrie(chr(0))
     if variavel:
         tamanhoAtual = 8
     else:
         tamanhoAtual = 12
         
-    dicionario = inicializaDicionario(f'0{tamanhoAtual}b')
+    dicionario = inicializaDicionario(arvore)
+    
     posicao = 256
     StringProvisoria = entrada[0]
-    resultado = ""
+    
+    encoded = bytearray()
+    bit_buffer = 0
+    bit_count = 0
 
     for caractere in entrada[1:]:
+        #print(arvore.search(StringProvisoria + caractere))
+        #print((StringProvisoria + caractere) in dicionario)
         if (StringProvisoria + caractere) in dicionario:
             StringProvisoria += caractere
         else:
-            tamanhoAnterior = tamanhoAtual
-            if posicao == (2 ** tamanhoAtual):
-                if tamanhoAtual < bitsMaximo:
-                    tamanhoAtual += 1
-                else:
-                    dicionario.clear()
-                    dicionario = inicializaDicionario(f'0{tamanhoAtual}b')
-                    posicao = 256
-                    tamanhoAtual = 8
-                    print(bitsMaximo)
+            #print(dicionario[StringProvisoria].zfill(tamanhoAtual))
             
-            dicionario[StringProvisoria+caractere] = format(posicao, f'0{tamanhoAtual}b')
-            posicao+=1
-            resultado += dicionario[StringProvisoria].zfill(tamanhoAnterior)
+            bit_buffer = (bit_buffer << tamanhoAtual) | dicionario[StringProvisoria]
+            bit_count += tamanhoAtual
+            
+            #print(dicionario[StringProvisoria])
+            
+            while bit_count >= 8:
+                bit_count -= 8
+                byte = (bit_buffer >> bit_count) & 0xFF
+                encoded.append(byte)
+                
+            
+            if posicao < (2 ** bitsMaximo):
+                if posicao >= (1 << tamanhoAtual) and tamanhoAtual < bitsMaximo:
+                    tamanhoAtual += 1
+                #valor = arvore.insert_prefix(StringProvisoria+caractere)
+                dicionario[StringProvisoria+caractere] = posicao
+                posicao+=1
+                #print(valor)
+                #print(dicionario[StringProvisoria])
+            #else:
+                #dicionario.clear()
+                #tamanhoAtual = 8 if variavel else 12
+                #dicionario = inicializaDicionario(arvore)
+                #posicao = 256
+
             StringProvisoria = caractere
-    resultado += dicionario[StringProvisoria].zfill(tamanhoAtual)
-    return resultado    
+    #print(dicionario)
+    
+    bit_buffer = (bit_buffer << tamanhoAtual) | dicionario[StringProvisoria]
+    bit_count += tamanhoAtual
+    
+    while bit_count >= 8:
+        bit_count -= 8
+        byte = (bit_buffer >> bit_count) & 0xFF
+        encoded.append(byte)
+
+    if bit_count > 0:
+        byte = (bit_buffer << (8 - bit_count)) & 0xFF
+        encoded.append(byte)
+    #print(dicionario[StringProvisoria].zfill(tamanhoAtual))
+    #arvore.display_text()
+    #print(bytes(encoded))
+    
+    #print(resultado)
+    
+    #print(''.join(f'{byte:08b}' for byte in bytes(encoded)))
+          
+    return bytes(encoded)
 
 def descompressao(comprimido,bitsMaximo,variavel):
     if variavel:
         tamanhoAtual = 8
     else:
         tamanhoAtual = 12
-    
-    dicionario = inicializaDicionarioInverso(f'0{tamanhoAtual}b')
-    posicao = 256
-    StringProvisoria = dicionario[comprimido[0:0+tamanhoAtual]]
-    StringSaida = StringProvisoria
-    inicio = tamanhoAtual 
-    
-    while inicio < len(comprimido):
-        if posicao == (2 ** tamanhoAtual):
-            if tamanhoAtual < bitsMaximo:
-                tamanhoAtual += 1
-            else:
-                dicionario.clear()
-                dicionario = inicializaDicionarioInverso(f'0{tamanhoAtual}b')
-                posicao = 256
-        codigo = comprimido[inicio:inicio+tamanhoAtual]
         
-        entrada = ""
-        while (len(codigo) >= 8): #Provisorio, na Trie provavelmente existe jeitos melhores
-            if codigo in dicionario:
-                entrada = dicionario[codigo]
-                break
+    arvore = PrefixTrie(chr(0))
+    
+    dicionario = inicializaDicionarioInverso(arvore)
+    
+    StringProvisoria = ""
+    StringSaida = StringProvisoria
+    
+    bit_buffer = 0
+    bit_count = 0
+    posicao = 256
+        
+    for byte in comprimido:
+        bit_buffer = (bit_buffer << 8) | byte
+        bit_count += 8       
+        while bit_count >= tamanhoAtual:
+            bit_count -= tamanhoAtual
+            numero = (bit_buffer >> bit_count) & ((1 << tamanhoAtual) - 1)
+            #print(numero)
+            entrada = ""
+            #print(arvore.search(codigo))
+            #print(codigo in dicionario)
+            if numero in dicionario:
+                entrada = dicionario[numero]
             else:
                 entrada = StringProvisoria + StringProvisoria[0]
-                if (codigo[0] == '0'):
-                    codigo = codigo[1:]
-                else:
-                    break
-        StringSaida+=entrada
+            StringSaida+=entrada
+            #valor = arvore.insert_prefix(format(posicao, f'0{tamanhoAtual}b'))
+            
+            if len(dicionario) < (1 << bitsMaximo):
+                if StringProvisoria:
+                    dicionario[posicao] = StringProvisoria + entrada[0]
+                    posicao += 1
+
+                if posicao >= (1 << tamanhoAtual) and tamanhoAtual < bitsMaximo:
+                    tamanhoAtual += 1
+            #else
+                #print(dicionario)
+                #print(entrada)
+                #dicionario.clear()
+                #tamanhoAtual = 8 if variavel else 12
+                #dicionario = inicializaDicionarioInverso(arvore)
+                #posicao = 256                 
         
-        dicionario[format(posicao, f'0{tamanhoAtual}b')] = StringProvisoria + entrada[0]
-        posicao+=1
-        StringProvisoria = entrada
-        inicio += tamanhoAtual
+            StringProvisoria = entrada
+    #print(dicionario)
     return StringSaida
 
 entrada = sys.argv[1]      
 
 arquivo = open(entrada)
 texto = arquivo.read() 
-bitsMaximo = int(sys.argv[2])   
 
-if bitsMaximo is None:
-    bitsMaximo = 12
-    
 variavel = True
+
+if len(sys.argv) < 3 or not variavel:
+    bitsMaximo = 12
+else:
+    bitsMaximo =  int(sys.argv[2])
 
 comprimido = compressao(texto,bitsMaximo,variavel)
 
@@ -107,8 +162,10 @@ print(f"Memória usada pelo comprimido: {sys.getsizeof(comprimido)} bytes")
 descomprimido = descompressao(comprimido,bitsMaximo,variavel)
 
 print(descomprimido == texto)
-    
+
 arquivo.close()
+
+print(descomprimido)
 
 #Você também deverá implementar uma opção de teste em que o programa
 #armazenará estatísticas da codificação/decodificação. Essas estatísticas deverão conter

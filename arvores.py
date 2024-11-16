@@ -67,30 +67,30 @@ class PrefixTrie:
             self._remove_invalid_nodes_recursive(child_node)
 
 # Teste com texto
-with open("test.txt", "r", encoding="utf-8") as file:
-    text = file.read()
+#with open("test.txt", "r", encoding="utf-8") as file:
+    #text = file.read()
 
-prefix_trie = PrefixTrie(text)
+#prefix_trie = PrefixTrie(text)
 
 # Exibição antes da remoção
-prefix_trie.display_ascii()
-prefix_trie.display_text()
+#prefix_trie.display_ascii()
+#prefix_trie.display_text()
 
 # Remover nós fora do intervalo ASCII válido
-prefix_trie.remove_invalid_nodes()
+#prefix_trie.remove_invalid_nodes()
 
 # Exibição após a remoção
-prefix_trie.display_ascii()
-prefix_trie.display_text()
+#prefix_trie.display_ascii()
+#prefix_trie.display_text()
 
 # Testando buscas
-print("\nResultados das buscas:\n")
-print(prefix_trie.search("Oi"))
-print(prefix_trie.search("Oi "))
-print(prefix_trie.search("Oi  "))  
-print(prefix_trie.search("sou um texto"))  
-print(prefix_trie.search("Oi sou um teste, será que funcionou?"))  
-print(prefix_trie.search("2019"))  
-print(prefix_trie.search("Michigan"))
-print(prefix_trie.search("The Incredible"))
+#print("\nResultados das buscas:\n")
+#print(prefix_trie.search("Oi"))
+#print(prefix_trie.search("Oi "))
+#print(prefix_trie.search("Oi  "))  
+#print(prefix_trie.search("sou um texto"))  
+#print(prefix_trie.search("Oi sou um teste, será que funcionou?"))  
+#print(prefix_trie.search("2019"))  
+#print(prefix_trie.search("Michigan"))
+#print(prefix_trie.search("The Incredible"))
 
