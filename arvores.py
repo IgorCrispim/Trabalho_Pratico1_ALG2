@@ -10,11 +10,11 @@ class PrefixTrieNode:
 class PrefixTrie:
     def __init__(self, text):
         self.root = PrefixTrieNode()
-        self.node_pointers = []  # Vetor de nós armazenados na ordem de inserção
-        self.prefix_list = []    # Lista de prefixos associados aos índices
+        self.node_pointers = []  
+        self.prefix_list = []   
         for i in range(1, len(text) + 1):
             self.insert_prefix(text[:i])
-        self.compact_trie(self.root)  # Compactar a árvore após a construção
+        self.compact_trie(self.root)
 
     def insert_prefix(self, prefix):
         node = self.root
@@ -22,7 +22,6 @@ class PrefixTrie:
             ascii_val = ord(char)
             node = node.children[ascii_val]
         node.is_end_of_prefix = True
-        # Adicionar o nó e o prefixo ao vetor e à lista
         self.node_pointers.append(node)
         self.prefix_list.append(prefix)
         print(f"Inserção realizada: {prefix} (índice {len(self.node_pointers) - 1})")
@@ -31,10 +30,8 @@ class PrefixTrie:
         # Compactar a árvore recursivamente
         for char, child in list(node.children.items()):
             self.compact_trie(child)
-            # Se o filho tiver exatamente um filho e não for final de prefixo
             if len(child.children) == 1 and not child.is_end_of_prefix:
                 grandchild_char, grandchild_node = next(iter(child.children.items()))
-                # Combinar os nós
                 combined_char = chr(char) + chr(grandchild_char)
                 node.children[ord(combined_char)] = grandchild_node
                 del node.children[char]
@@ -54,7 +51,6 @@ class PrefixTrie:
             print(f"Índice {index}: {prefix}")
 
     def get_index(self, value):
-        """Retorna o índice do valor na árvore ou -1 se não encontrado."""
         if value in self.prefix_list:
             return self.prefix_list.index(value)
         return -1
