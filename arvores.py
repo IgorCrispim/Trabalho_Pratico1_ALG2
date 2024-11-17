@@ -1,17 +1,16 @@
 from collections import defaultdict
 
-
 # Definição dos nós prefixo
 class PrefixTrieNode:
     def __init__(self):
         self.children = defaultdict(PrefixTrieNode)
         self.is_end_of_prefix = False
 
-
 # Definição da árvore de prefixo
 class PrefixTrie:
     def __init__(self, text):
         self.root = PrefixTrieNode()
+        self.index_counter = 0  # Contador para rastrear o índice das inserções
         for i in range(1, len(text) + 1):
             self.insert_prefix(text[:i])
         self.compact_trie(self.root)
@@ -22,6 +21,9 @@ class PrefixTrie:
             ascii_val = ord(char)
             node = node.children[ascii_val]
         node.is_end_of_prefix = True
+        # Incrementar o contador e imprimir o índice
+        self.index_counter += 1
+        print(f"Inserção realizada: índice {self.index_counter}")
 
     def search(self, pattern):
         node = self.root
