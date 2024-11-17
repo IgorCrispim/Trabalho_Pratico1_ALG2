@@ -10,7 +10,8 @@ class PrefixTrieNode:
 class PrefixTrie:
     def __init__(self, text):
         self.root = PrefixTrieNode()
-        self.index_counter = 0  
+        self.index_counter = 0  # Contador para rastrear o índice das inserções
+        self.node_pointers = []  # Vetor para armazenar os nós
         for i in range(1, len(text) + 1):
             self.insert_prefix(text[:i])
         self.compact_trie(self.root)
@@ -21,7 +22,9 @@ class PrefixTrie:
             ascii_val = ord(char)
             node = node.children[ascii_val]
         node.is_end_of_prefix = True
+        # Incrementar o contador, armazenar o nó no vetor, e imprimir o índice
         self.index_counter += 1
+        self.node_pointers.append(node)
         print(f"Inserção realizada: índice {self.index_counter}")
 
     def search(self, pattern):
@@ -87,6 +90,11 @@ prefix_trie.remove_invalid_nodes()
 
 prefix_trie.display_ascii()
 prefix_trie.display_text()
+
+# Exibindo vetor de nós
+print("\nVetor de nós armazenados por índice:")
+for index, node in enumerate(prefix_trie.node_pointers, start=1):
+    print(f"Índice {index}: Nó com filhos {list(node.children.keys())}")
 
 # Testando buscas
 print("\nResultados das buscas:\n")
