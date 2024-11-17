@@ -12,6 +12,7 @@ class PrefixTrie:
         self.root = PrefixTrieNode()
         self.node_pointers = []  
         self.prefix_list = []   
+        self.index_map = {} 
         for i in range(1, len(text) + 1):
             self.insert_prefix(text[:i])
         self.compact_trie(self.root)
@@ -27,7 +28,6 @@ class PrefixTrie:
         print(f"Inserção realizada: {prefix} (índice {len(self.node_pointers) - 1})")
 
     def compact_trie(self, node):
-        # Compactar a árvore recursivamente
         for char, child in list(node.children.items()):
             self.compact_trie(child)
             if len(child.children) == 1 and not child.is_end_of_prefix:
@@ -51,6 +51,13 @@ class PrefixTrie:
             print(f"Índice {index}: {prefix}")
 
     def get_index(self, value):
+        if value.isdigit():
+            index = int(value)
+            if index < len(self.prefix_list):
+                return self.prefix_list[index]
+            else:
+                return f"Valor numérico {value} não encontrado na árvore."
+        
         if value in self.prefix_list:
             return self.prefix_list.index(value)
         return -1
@@ -66,7 +73,7 @@ class PrefixTrie:
             self._display_recursive_text(child_node, prefix + chr(ascii_val))
 
 
-# Teste com texto
+# Teste com texto vindo de arquivo
 with open("test.txt", "r", encoding="utf-8") as file:
     text = file.read()
 
@@ -77,15 +84,15 @@ prefix_trie.display_prefixes()
 
 # Testando buscas
 print("\nResultados das buscas:")
-print(prefix_trie.search("Oi"))
-print(prefix_trie.search("Oi "))
-print(prefix_trie.search("Oi  "))
-print(prefix_trie.search("sou um texto"))
+print(prefix_trie.search("Oi")) 
+print(prefix_trie.search("Oi "))  
+print(prefix_trie.search("Oi  "))  
+print(prefix_trie.search("sou um texto")) 
 
 # Testando obtenção de índices
 print("\nÍndices dos valores na árvore:")
 print(f"Índice de 'Oi': {prefix_trie.get_index('Oi')}")
 print(f"Índice de 'OiO': {prefix_trie.get_index('OiO')}")
 print(f"Índice de 'não está': {prefix_trie.get_index('não está')}")
-print(f"Índice de 'não está': {prefix_trie.get_index('Oi sou um teste, ')}")
-
+print(f"Índice de '256': {prefix_trie.get_index('256')}")
+print(f"Índice de 'Oi sou um teste, '): {prefix_trie.get_index('Oi sou um teste, ')}")
