@@ -91,3 +91,5 @@ print("\nÍndices dos valores na árvore:")
 print(f"Índice de 'Oi': {prefix_trie.get_index('Oi')}")
 print(f"Índice de 'OiO': {prefix_trie.get_index('OiO')}")
 print(f"Índice de 'não está': {prefix_trie.get_index('não está')}")
+print(f"Índice de 'não está': {prefix_trie.get_index('Oi sou um teste, ')}")
+
