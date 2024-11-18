@@ -20,6 +20,10 @@ class PrefixTrie:
         return format(ord(char), '08b')
 
     def insert_prefix(self, prefix):
+        
+        if isinstance(prefix, int):
+            prefix = str(prefix)
+        
         node = self.root
         binary_path = ''.join(self.char_to_binary(char) for char in prefix)
         for bit in binary_path:
@@ -30,7 +34,6 @@ class PrefixTrie:
         print(f"Inserção realizada: {prefix} (caminho binário: {binary_path})")
 
     def compact_trie(self, node):
-        # Compactar a árvore recursivamente
         for char, child in list(node.children.items()):
             self.compact_trie(child)
             if len(child.children) == 1 and not child.is_end_of_prefix:
@@ -108,6 +111,7 @@ with open("test.txt", "r", encoding="utf-8") as file:
 prefix_trie = PrefixTrie(text)
 
 prefix_trie.display_prefixes()
+prefix_trie.display_text()
 
 # Testando remoção
 print("\nRemovendo elementos:")
