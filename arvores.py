@@ -1,14 +1,19 @@
+import time
+import sys
+
 class CompactBinaryTrieNode:
     def __init__(self):
-        self.children = {} 
+        self.children = {}  # Armazena 0 ou 1 como chaves
         self.is_end_of_prefix = False
-        self.index = None  
+        self.index = None  # Índice associado ao prefixo
 
 class CompactBinaryTrie:
     def __init__(self, text):
         self.root = CompactBinaryTrieNode()
         self.prefix_list = []
-        self.index_counter = 256  
+        self.index_counter = 256  # Índice inicial para o próximo prefixo (exemplo: 256)
+        self.num_inserts = 0  # Contador de inserções realizadas
+        self.total_insertion_time = 0  # Tempo total de inserção
         for i in range(1, len(text) + 1):
             self.insert_prefix(text[:i])
 
@@ -16,6 +21,8 @@ class CompactBinaryTrie:
         return format(ord(char), '08b')
 
     def insert_prefix(self, prefix):
+        start_time = time.time()  # Inicia o temporizador
+
         node = self.root
         binary_path = ''.join(self.char_to_binary(char) for char in prefix)
 
@@ -26,21 +33,28 @@ class CompactBinaryTrie:
 
         if not node.is_end_of_prefix:
             node.is_end_of_prefix = True
-            node.index = self.index_counter  
-            self.index_counter += 1  
+            node.index = self.index_counter
+            self.index_counter += 1
 
         self.prefix_list.append(prefix)
-        print(f"Inserção realizada: {prefix} (caminho binário: {binary_path})")
+        self.num_inserts += 1
+
+        end_time = time.time()  # Termina o temporizador
+        self.total_insertion_time += (end_time - start_time)
 
     def search(self, pattern):
+        start_time = time.time()
+
         node = self.root
         binary_path = ''.join(self.char_to_binary(char) for char in pattern)
 
         for bit in binary_path:
             if bit not in node.children:
-                return None  
+                return None
             node = node.children[bit]
 
+        end_time = time.time()
+        print(f"Tempo de busca para '{pattern}': {end_time - start_time:.6f} segundos")
         return node.index if node.is_end_of_prefix else None
 
     def display_prefixes(self):
@@ -65,7 +79,7 @@ class CompactBinaryTrie:
         if depth == len(binary_path):
             if node.is_end_of_prefix:
                 node.is_end_of_prefix = False
-                node.index = None  
+                node.index = None
             return len(node.children) == 0
 
         bit = binary_path[depth]
@@ -75,6 +89,28 @@ class CompactBinaryTrie:
                 del node.children[bit]
 
         return len(node.children) == 0 and not node.is_end_of_prefix
+
+    def get_tree_statistics(self):
+        # Calcula o número de nós e o espaço ocupado pela árvore
+        num_nodes = self.count_nodes(self.root)
+        space_usage = self.calculate_space_usage(self.root)
+        print(f"\nNúmero de nós na árvore: {num_nodes}")
+        print(f"Espaço estimado ocupado pela árvore: {space_usage / (1024):.2f} KB")
+        print(f"Número de prefixos armazenados: {self.num_inserts}")
+        print(f"Tempo total de inserção: {self.total_insertion_time:.6f} segundos")
+
+    def count_nodes(self, node):
+        # Conta o número de nós na árvore
+        num_nodes = 1  # Conta o nó atual
+        for child in node.children.values():
+            num_nodes += self.count_nodes(child)
+        return num_nodes
+
+    def calculate_space_usage(self, node):
+        # Estima o espaço usado pela árvore
+        node_size = sys.getsizeof(node)  # Tamanho do objeto de nó
+        children_size = sum(sys.getsizeof(child) for child in node.children.values())  # Tamanho dos filhos
+        return node_size + children_size
 
 
 # Lendo texto do arquivo
@@ -97,6 +133,9 @@ print("\nResultados das buscas:")
 print(f"Buscando 'Oi': {compact_binary_trie.search('Oi')}")
 print(f"Buscando 'Oi  ': {compact_binary_trie.search('Oi  ')}")
 print(f"Buscando 'Oi sou um teste,': {compact_binary_trie.search('Oi sou um teste,')}")
+
+# Exibindo as estatísticas da árvore
+compact_binary_trie.get_tree_statistics()
 
 # Testando remoção
 print("\nRemovendo elementos:")
