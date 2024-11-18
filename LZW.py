@@ -12,7 +12,7 @@ def inicializaDicionarioInverso(arvore):
     dicionario = {}
     for i in range(256):
         dicionario[i] = chr(i)
-        #arvore.insert_prefix(i)
+        arvore.insert_prefix(i)
     return dicionario   
 
 def compressao(entrada,bitsMaximo,variavel):
@@ -32,17 +32,17 @@ def compressao(entrada,bitsMaximo,variavel):
     bit_count = 0
 
     for caractere in entrada[1:]:
-        #print(arvore.search(StringProvisoria + caractere))
-        #print((StringProvisoria + caractere) in dicionario)
+        print(arvore.search(StringProvisoria + caractere))
+        print((StringProvisoria + caractere) in dicionario)
         if (StringProvisoria + caractere) in dicionario:
             StringProvisoria += caractere
         else:
-            #print(dicionario[StringProvisoria].zfill(tamanhoAtual))
             
             bit_buffer = (bit_buffer << tamanhoAtual) | dicionario[StringProvisoria]
             bit_count += tamanhoAtual
             
-            #print(dicionario[StringProvisoria])
+            print(dicionario[StringProvisoria])
+            print(arvore.get_index(StringProvisoria))
             
             while bit_count >= 8:
                 bit_count -= 8
@@ -53,11 +53,9 @@ def compressao(entrada,bitsMaximo,variavel):
             if posicao < (2 ** bitsMaximo):
                 if posicao >= (1 << tamanhoAtual) and tamanhoAtual < bitsMaximo:
                     tamanhoAtual += 1
-                #valor = arvore.insert_prefix(StringProvisoria+caractere)
+                arvore.insert_prefix(StringProvisoria+caractere)
                 dicionario[StringProvisoria+caractere] = posicao
                 posicao+=1
-                #print(valor)
-                #print(dicionario[StringProvisoria])
             #else:
                 #dicionario.clear()
                 #tamanhoAtual = 8 if variavel else 12
@@ -65,7 +63,6 @@ def compressao(entrada,bitsMaximo,variavel):
                 #posicao = 256
 
             StringProvisoria = caractere
-    #print(dicionario)
     
     bit_buffer = (bit_buffer << tamanhoAtual) | dicionario[StringProvisoria]
     bit_count += tamanhoAtual
@@ -78,14 +75,7 @@ def compressao(entrada,bitsMaximo,variavel):
     if bit_count > 0:
         byte = (bit_buffer << (8 - bit_count)) & 0xFF
         encoded.append(byte)
-    #print(dicionario[StringProvisoria].zfill(tamanhoAtual))
-    #arvore.display_text()
-    #print(bytes(encoded))
-    
-    #print(resultado)
-    
-    #print(''.join(f'{byte:08b}' for byte in bytes(encoded)))
-          
+
     return bytes(encoded)
 
 def descompressao(comprimido,bitsMaximo,variavel):

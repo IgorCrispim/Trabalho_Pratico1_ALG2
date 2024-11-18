@@ -16,6 +16,10 @@ class CompactBinaryTrie:
         return format(ord(char), '08b')
 
     def insert_prefix(self, prefix):
+        
+        if isinstance(prefix, int):
+            prefix = str(prefix)
+        
         node = self.root
         binary_path = ''.join(self.char_to_binary(char) for char in prefix)
 
@@ -31,6 +35,16 @@ class CompactBinaryTrie:
 
         self.prefix_list.append(prefix)
         print(f"Inserção realizada: {prefix} (caminho binário: {binary_path})")
+
+    def compact_trie(self, node):
+        # Compactar a árvore recursivamente
+        for char, child in list(node.children.items()):
+            self.compact_trie(child)
+            if len(child.children) == 1 and not child.is_end_of_prefix:
+                grandchild_char, grandchild_node = next(iter(child.children.items()))
+                combined_char = char + grandchild_char
+                node.children[combined_char] = grandchild_node
+                del node.children[char]
 
     def search(self, pattern):
         node = self.root
@@ -76,27 +90,41 @@ class CompactBinaryTrie:
 
         return len(node.children) == 0 and not node.is_end_of_prefix
 
+    def display_prefixes(self):
+        print("\nPrefixos armazenados no vetor:")
+        for index, prefix in enumerate(self.prefix_list):
+            status = "Removido" if prefix is None else prefix
+            print(f"Índice {index}: {status}")
 
-# Lendo texto do arquivo
-def read_file(file_path):
-    with open(file_path, "r", encoding="utf-8") as file:
-        return file.read()
+    def get_index(self, value):
+        if value.isdigit():
+            index = int(value)
+            if index < len(self.prefix_list):
+                return self.prefix_list[index]
+            else:
+                return f"Valor numérico {value} não encontrado na árvore."
+        if value in self.prefix_list:
+            return self.prefix_list.index(value)
+        return -1
 
-# Arquivo de texto
-file_path = "test.txt"
-text = read_file(file_path)
+    def display_text(self):
+        print("\nExibição traduzida para texto:\n")
+        self._display_recursive_text(self.root, "")
 
-# Criando a trie compacta em binário
-compact_binary_trie = CompactBinaryTrie(text)
+    def _display_recursive_text(self, node, prefix):
+        if node.is_end_of_prefix:
+            print(prefix)
+        for bit, child_node in node.children.items():
+            self._display_recursive_text(child_node, prefix + bit)
 
-# Exibindo os prefixos inseridos
-compact_binary_trie.display_prefixes()
 
-# Testando busca
-print("\nResultados das buscas:")
-print(f"Buscando 'Oi': {compact_binary_trie.search('Oi')}")
-print(f"Buscando 'Oi  ': {compact_binary_trie.search('Oi  ')}")
-print(f"Buscando 'Oi sou um teste,': {compact_binary_trie.search('Oi sou um teste,')}")
+# Teste com texto vindo de arquivo
+with open("test.txt", "r", encoding="utf-8") as file:
+    text = file.read()
+
+prefix_trie = PrefixTrie(text)
+
+prefix_trie.display_prefixes()
 
 # Testando remoção
 print("\nRemovendo elementos:")
