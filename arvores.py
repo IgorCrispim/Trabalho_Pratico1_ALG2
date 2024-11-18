@@ -3,25 +3,22 @@ import sys
 
 class CompactBinaryTrieNode:
     def __init__(self):
-        self.children = {}  # Armazena 0 ou 1 como chaves
+        self.children = {}  
         self.is_end_of_prefix = False
-        self.index = None  # Índice associado ao prefixo
+        self.index = None  
 
 class CompactBinaryTrie:
-    def __init__(self, text):
+    def __init__(self):
         self.root = CompactBinaryTrieNode()
         self.prefix_list = []
-        self.index_counter = 256  # Índice inicial para o próximo prefixo (exemplo: 256)
-        self.num_inserts = 0  # Contador de inserções realizadas
-        self.total_insertion_time = 0  # Tempo total de inserção
-        for i in range(1, len(text) + 1):
-            self.insert_prefix(text[:i])
+        self.num_inserts = 0  
+        self.total_insertion_time = 0 
 
     def char_to_binary(self, char):
         return format(ord(char), '08b')
 
-    def insert_prefix(self, prefix):
-        start_time = time.time()  # Inicia o temporizador
+    def insert_prefix(self, prefix, index):
+        start_time = time.time()  
 
         node = self.root
         binary_path = ''.join(self.char_to_binary(char) for char in prefix)
@@ -33,13 +30,12 @@ class CompactBinaryTrie:
 
         if not node.is_end_of_prefix:
             node.is_end_of_prefix = True
-            node.index = self.index_counter
-            self.index_counter += 1
+            node.index = index  
 
         self.prefix_list.append(prefix)
         self.num_inserts += 1
 
-        end_time = time.time()  # Termina o temporizador
+        end_time = time.time()  
         self.total_insertion_time += (end_time - start_time)
 
     def search(self, pattern):
@@ -101,15 +97,15 @@ class CompactBinaryTrie:
 
     def count_nodes(self, node):
         # Conta o número de nós na árvore
-        num_nodes = 1  # Conta o nó atual
+        num_nodes = 1  
         for child in node.children.values():
             num_nodes += self.count_nodes(child)
         return num_nodes
 
     def calculate_space_usage(self, node):
         # Estima o espaço usado pela árvore
-        node_size = sys.getsizeof(node)  # Tamanho do objeto de nó
-        children_size = sum(sys.getsizeof(child) for child in node.children.values())  # Tamanho dos filhos
+        node_size = sys.getsizeof(node) 
+        children_size = sum(sys.getsizeof(child) for child in node.children.values())  
         return node_size + children_size
 
 
@@ -123,7 +119,13 @@ file_path = "test.txt"
 text = read_file(file_path)
 
 # Criando a trie compacta em binário
-compact_binary_trie = CompactBinaryTrie(text)
+compact_binary_trie = CompactBinaryTrie()
+
+# Inserindo prefixos com índices específicos
+compact_binary_trie.insert_prefix('Oi', 1)
+compact_binary_trie.insert_prefix('Oi sou', 2)
+compact_binary_trie.insert_prefix('Oi sou um', 3)
+compact_binary_trie.insert_prefix('Oi sou um teste', 4)
 
 # Exibindo os prefixos inseridos
 compact_binary_trie.display_prefixes()
@@ -131,7 +133,7 @@ compact_binary_trie.display_prefixes()
 # Testando busca
 print("\nResultados das buscas:")
 print(f"Buscando 'Oi': {compact_binary_trie.search('Oi')}")
-print(f"Buscando 'Oi  ': {compact_binary_trie.search('Oi  ')}")
+print(f"Buscando 'Oi sou': {compact_binary_trie.search('Oi sou')}")
 print(f"Buscando 'Oi sou um teste,': {compact_binary_trie.search('Oi sou um teste,')}")
 
 # Exibindo as estatísticas da árvore
@@ -140,7 +142,7 @@ compact_binary_trie.get_tree_statistics()
 # Testando remoção
 print("\nRemovendo elementos:")
 compact_binary_trie.remove_by_index(1)
-compact_binary_trie.remove_by_index(5)
+compact_binary_trie.remove_by_index(3)
 
 # Exibindo os prefixos após remoção
 compact_binary_trie.display_prefixes()
