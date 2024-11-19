@@ -71,6 +71,9 @@
 #### Exibir estatísticas da árvore
 #### trie.get_tree_statistics()
 
+### Requisitos:
+#### Python 3.8 ou superior
+#### Biblioteca sys (inclusa no Python)
 
 
 
