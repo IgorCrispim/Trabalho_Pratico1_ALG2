@@ -50,31 +50,60 @@
 ###### Espaço ocupado (em KB);
 ###### Tempo total de inserção.
 
-### Exemplos de uso:
-####  Instanciar a trie
-#### trie = CompactBinaryTrie()
-
-#### Inserir prefixos
-#### trie.insert_prefix("AB", 0)
-#### trie.insert_prefix("CD", 1)
-
-#### Buscar prefixos
-#### print(trie.search("AB"))  # Output: 0
-#### print(trie.search("EF"))  # Output: None
-
-#### Exibir prefixos armazenados
-#### trie.display_prefixes()
-
-#### Remover prefixo pelo índice
-#### trie.remove_by_index(0)
-
-#### Exibir estatísticas da árvore
-#### trie.get_tree_statistics()
-
 ### Requisitos:
 #### Python 3.8 ou superior
 #### Biblioteca sys (inclusa no Python)
 
 
+## Lempel-Ziv-Welch
+### Descrição :
+#### Este projeto implementa um algoritmo de compressão e descompressão baseado na estrutura de dados Compact Binary Trie. Ele utiliza conceitos de codificação baseados em LZW (Lempel-Ziv-Welch) para manipular cadeias de caracteres e reduzir o uso de memória. A implementação suporta modos de compressão com tamanho fixo e dinâmico de dicionário, além de gerar estatísticas úteis sobre o processo de compressão.
+
+### Funcionalidades
+#### Compressão:
+##### Codifica um arquivo de entrada utilizando uma trie binária compacta;
+##### Suporta tamanhos de dicionário fixos (até 12 bits) ou variáveis.
+#### Descompressão:
+##### Decodifica o arquivo comprimido, reconstruindo o texto original.
+#### Inicialização de Dicionário:
+##### Mapeamento de caracteres para índices (compressão);
+##### Mapeamento de índices para caracteres (descompressão).
+#### Estatísticas:
+##### Memória usada pelo texto original e comprimido;
+##### Taxa de compressão;
+##### Validação de integridade do arquivo (compara texto original e descomprimido).
+
+### Estrutura de Arquivo
+#### Funções Principais
+##### Compressão
+###### compressao(entrada, bitsMaximo, variavel)
+###### entrada: Texto a ser comprimido;
+###### bitsMaximo: Número máximo de bits para o tamanho do dicionário;
+###### variavel: Define se o tamanho do dicionário é dinâmico (True) ou fixo (False);
+###### Retorno: Arquivo comprimido como uma sequência de bytes.
+##### Descompressão
+###### descompressao(comprimido, bitsMaximo, variavel)
+###### comprimido: Arquivo comprimido como uma sequência de bytes;
+###### bitsMaximo: Número máximo de bits para o tamanho do dicionário;
+###### variavel: Define se o tamanho do dicionário é dinâmico (True) ou fixo (False);
+###### Retorno: Texto descomprimido como uma string.
+##### Inicialização de Dicionário
+###### inicializaDicionario(arvore)
+###### inicializaDicionarioInverso(arvore)
+###### Inicializam os dicionários de compressão e descompressão com os 256 caracteres ASCII.
+
+### Como Usar
+#### Executar Compressão:
+##### python script.py arquivo.txt [bitsMaximo]
+###### arquivo.txt: Caminho do arquivo de texto a ser comprimido;
+###### bitsMaximo (opcional): Número máximo de bits do dicionário (padrão: 12).
+
+### Requisitos 
+#### Python 3.8 ou superior
+#### Arquivo arvores.py contendo a classe CompactBinaryTrie (implementação separada).
+
+### Observações
+#### A implementação pode ser estendida para incluir suporte a arquivos binários e métodos avançados de análise estatística.
+#### Para realizar testes e armazenar as estatísticas, modifique o script para salvar as métricas em um arquivo de log.
 
 
