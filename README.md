@@ -24,28 +24,28 @@
 
 ### **Estrutura de Arquivo**
 #### Classes Principais
-##### CompactBinaryTrieNode:
-###### Representa um nó na trie.
+`CompactBinaryTrieNode`
+##### Representa um nó na trie.
 ###### Atributos:
 - children: Dicionário para armazenar os filhos;
 - index: Índice do prefixo armazenado.
 - is_end_of_prefix: Indica se é o fim de um prefixo.
-##### CompactBinaryTrie:
-###### Controla a estrutura da trie e fornece métodos para manipulação e análise.
+`CompactBinaryTrie:`
+##### Controla a estrutura da trie e fornece métodos para manipulação e análise.
 
 ### **Métodos Principais**
 #### Inserção
-##### insert_prefix(prefix, index)
-###### Insere um prefixo na trie em formato binário.
+`insert_prefix(prefix, index)`
+##### Insere um prefixo na trie em formato binário.
 #### Busca
-##### search(pattern)
-###### Retorna o índice do prefixo se encontrado, ou None.
+`search(pattern)`
+##### Retorna o índice do prefixo se encontrado, ou None.
 #### Remoção
-##### remove_by_index(index)
-###### Retorna True se removido com sucesso, False caso contrário.
+`remove_by_index(index)`
+##### Retorna True se removido com sucesso, False caso contrário.
 #### Estatísticas
-##### get_tree_statistics()
-###### Calucula e exibe :
+`get_tree_statistics()`
+##### Calucula e exibe :
 - Número de nós na trie;
 - Espaço ocupado (em KB);
 - Tempo total de inserção.
@@ -94,9 +94,9 @@
 
 ### **Como Usar**
 #### Executar Compressão:
-##### python script.py arquivo.txt [bitsMaximo]
-###### arquivo.txt: Caminho do arquivo de texto a ser comprimido;
-###### bitsMaximo (opcional): Número máximo de bits do dicionário (padrão: 12).
+`python script.py arquivo.txt [bitsMaximo]`
+`arquivo.txt: Caminho do arquivo de texto a ser comprimido;`
+`bitsMaximo (opcional): Número máximo de bits do dicionário (padrão: 12).`
 
 ### **Requisitos** 
 #### Python 3.8 ou superior
