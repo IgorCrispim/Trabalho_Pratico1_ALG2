@@ -54,7 +54,10 @@ if __name__ == '__main__':
         if teste:
             comprimido, taxas_compressao, tempo_total, numero_nos_total, espaco_total, numero_elementos_total = LZW.compressao(
                 texto, bitsMaximo, variavel, teste)
-            relatorio.geraRelatorio(taxas_compressao, tempo_total, numero_nos_total, espaco_total, numero_elementos_total, len(texto), "Compressao - " + nome_arquivo)
+            if variavel:
+                relatorio.geraRelatorio(taxas_compressao, tempo_total, numero_nos_total, espaco_total, numero_elementos_total, len(texto), "Compressao variavel - " + nome_arquivo)
+            else:
+                relatorio.geraRelatorio(taxas_compressao, tempo_total, numero_nos_total, espaco_total, numero_elementos_total, len(texto), "Compressao fixa - " + nome_arquivo)
         else:
             comprimido = LZW.compressao(texto, bitsMaximo, variavel, teste)
         with open(f"Arquivos comprimidos/{nome_arquivo}.bin", "wb") as arquivo:
@@ -63,7 +66,10 @@ if __name__ == '__main__':
         if teste:
             descomprimido, taxas_compressao, tempo_total, numero_nos_total, espaco_total, numero_elementos_total = LZW.descompressao(
                 texto, bitsMaximo, variavel, teste)
-            relatorio.geraRelatorio(taxas_compressao, tempo_total, numero_nos_total, espaco_total, numero_elementos_total, len(texto), "Descompressao - " + nome_arquivo)
+            if variavel:
+                relatorio.geraRelatorio(taxas_compressao, tempo_total, numero_nos_total, espaco_total, numero_elementos_total, len(texto), "Descompressao variavel - " + nome_arquivo)
+            else:
+                relatorio.geraRelatorio(taxas_compressao, tempo_total, numero_nos_total, espaco_total, numero_elementos_total, len(texto), "Descompressao fixa - " + nome_arquivo)
         else:
             descomprimido = LZW.descompressao(texto, bitsMaximo, variavel, teste)
         with open(f"Arquivos descomprimidos/{nome_arquivo}.txt", "w", encoding="utf-8") as arquivo:
