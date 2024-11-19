@@ -17,19 +17,19 @@
 #### Remoção por Índice:
 ##### Remove um prefixo da trie baseado no índice armazenado na lista.
 #### Estatísticas da Árvore:
-##### Total de nós;
-##### Espaço estimado ocupado (em KB);
-##### Número de prefixos armazenados;
-##### Tempo total gasto na inserção.
+- Total de nós;
+- Espaço estimado ocupado (em KB);
+- Número de prefixos armazenados;
+- Tempo total gasto na inserção.
 
 ### **Estrutura de Arquivo**
 #### Classes Principais
 ##### CompactBinaryTrieNode:
 ###### Representa um nó na trie.
 ###### Atributos:
-###### *children: Dicionário para armazenar os filhos;*
-###### *index: Índice do prefixo armazenado.*
-###### *is_end_of_prefix: Indica se é o fim de um prefixo.*
+- children: Dicionário para armazenar os filhos;
+- index: Índice do prefixo armazenado.
+- is_end_of_prefix: Indica se é o fim de um prefixo.
 ##### CompactBinaryTrie:
 ###### Controla a estrutura da trie e fornece métodos para manipulação e análise.
 
@@ -46,9 +46,9 @@
 #### Estatísticas
 ##### get_tree_statistics()
 ###### Calucula e exibe :
-###### *Número de nós na trie;*
-###### *Espaço ocupado (em KB);*
-###### *Tempo total de inserção.*
+- Número de nós na trie;
+- Espaço ocupado (em KB);
+- Tempo total de inserção.
 
 ### **Requisitos:**
 #### Python 3.8 ou superior
@@ -77,16 +77,16 @@
 #### Funções Principais
 ##### Compressão
 ###### compressao(entrada, bitsMaximo, variavel)
-###### *entrada: Texto a ser comprimido;*
-###### *bitsMaximo: Número máximo de bits para o tamanho do dicionário;*
-###### *variavel: Define se o tamanho do dicionário é dinâmico (True) ou fixo (False);*
+- entrada: Texto a ser comprimido;
+- bitsMaximo: Número máximo de bits para o tamanho do dicionário;
+- variavel: Define se o tamanho do dicionário é dinâmico (True) ou fixo (False);
 ###### *Retorno: Arquivo comprimido como uma sequência de bytes.*
 ##### Descompressão
 ###### descompressao(comprimido, bitsMaximo, variavel)
-###### *comprimido: Arquivo comprimido como uma sequência de bytes;*
-###### *bitsMaximo: Número máximo de bits para o tamanho do dicionário;*
-###### *variavel: Define se o tamanho do dicionário é dinâmico (True) ou fixo (False);*
-###### *Retorno: Texto descomprimido como uma string.*
+- comprimido: Arquivo comprimido como uma sequência de bytes;
+- bitsMaximo: Número máximo de bits para o tamanho do dicionário;
+- variavel: Define se o tamanho do dicionário é dinâmico (True) ou fixo (False);
+- Retorno: Texto descomprimido como uma string.
 ##### Inicialização de Dicionário
 ###### inicializaDicionario(arvore)
 ###### inicializaDicionarioInverso(arvore)
@@ -106,6 +106,6 @@
 #### A implementação pode ser estendida para incluir suporte a arquivos binários e métodos avançados de análise estatística.
 #### Para realizar testes e armazenar as estatísticas, modifique o script para salvar as métricas em um arquivo de log.
 
-## Índice
-- [Sobre](#sobre)
+
+
 
