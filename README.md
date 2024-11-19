@@ -1,7 +1,7 @@
 # **Trabalho Prático 1 - Algoritmos 2**
 
-![GitHub top language](https://img.shields.io/github/languages/top/IgorCrispim/Trabalho_Pratico1_ALG2)
-![GitHub last commit](https://img.shields.io/github/last-commit/IgorCrispim/Trabalho_Pratico1_ALG2)
+![GitHub top language](https://img.shields.io/github/languages/top/IgorCrispimTrabalho_Pratico1_ALG2)
+![GitHub last commit](https://img.shields.io/github/last-commit/IgorCrispimTrabalho_Pratico1_ALG2)
 ![License](https://img.shields.io/badge/license-MIT-blue)
 
 ## **Compact Binary Trie**
