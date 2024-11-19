@@ -2,7 +2,7 @@
 
 ## Compact Binary Trie README
 ### Descrição
-#### Este projeto implementa uma Compact Binary Trie em Python, projetada para armazenar e manipular prefixos convertidos em formato binário. A estrutura oferece suporte a inserção, busca, remoção e análise estatística da árvore de maneira eficiente. A estrutura é útil para situações em que prefixos precisam ser organizados e manipulados em um formato compacto e eficiente, como compressão de dados ou aplicações de roteamento.
+####    Este projeto implementa uma Compact Binary Trie em Python, projetada para armazenar e manipular prefixos convertidos em formato binário. A estrutura oferece suporte a inserção, busca, remoção e análise estatística da árvore de maneira eficiente. A estrutura é útil para situações em que prefixos precisam ser organizados e manipulados em um formato compacto e eficiente, como compressão de dados ou aplicações de roteamento.
 
 ### Funcionalidades
 #### Conversão de Caracteres em Binário:
