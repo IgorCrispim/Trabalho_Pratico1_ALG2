@@ -13,9 +13,10 @@ def geraRelatorio(taxas_compressao, tempo_total, numero_nos_total,espaco_total,n
     plt.xlabel('Numero de bytes')
     plt.ylabel('Taxa de compressão')
     
-    saida = 'Dados de teste/Grafico ' + nome_arquivo + '.png'
+    saida = 'Grafico ' + nome_arquivo + '.png'
+    repositorio = "Dados de teste/"
     
-    plt.savefig(saida, format='png')
+    plt.savefig(repositorio + saida, format='png')
     plt.close() 
     
     cabecalho = ["Descrições", "Estatísticas"]
