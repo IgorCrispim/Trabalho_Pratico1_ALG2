@@ -50,7 +50,6 @@ class CompactBinaryTrie:
             node = node.children[bit]
 
         end_time = time.time()
-        #print(f"Tempo de busca para '{pattern}': {end_time - start_time:.6f} segundos")
         return node.index if node.is_end_of_prefix else None
 
     def display_prefixes(self):
@@ -65,6 +64,10 @@ class CompactBinaryTrie:
             return False
 
         prefix_to_remove = self.prefix_list[index]
+        if prefix_to_remove is None:
+            print(f"Índice {index} já foi removido.")
+            return False
+
         binary_path = ''.join(self.char_to_binary(char) for char in prefix_to_remove)
         print(f"Removendo prefixo no índice {index}: {prefix_to_remove} (caminho binário: {binary_path})")
         self._remove_from_trie(self.root, binary_path, 0)
@@ -76,14 +79,13 @@ class CompactBinaryTrie:
             if node.is_end_of_prefix:
                 node.is_end_of_prefix = False
                 node.index = None
-            return len(node.children) == 0
+            return len(node.children) == 0  
 
         bit = binary_path[depth]
         if bit in node.children:
             can_delete = self._remove_from_trie(node.children[bit], binary_path, depth + 1)
             if can_delete:
                 del node.children[bit]
-
         return len(node.children) == 0 and not node.is_end_of_prefix
 
     def get_tree_statistics(self):
@@ -105,7 +107,5 @@ class CompactBinaryTrie:
     def calculate_space_usage(self, node):
         # Estima o espaço usado pela árvore
         node_size = sys.getsizeof(node) 
-        children_size = sum(sys.getsizeof(child) for child in node.children.values())  
+        children_size = sum(self.calculate_space_usage(child) for child in node.children.values())  
         return node_size + children_size
-
-
