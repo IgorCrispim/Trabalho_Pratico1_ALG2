@@ -1,22 +1,34 @@
-import sys
 from arvores import CompactBinaryTrie
+import time
+import sys
 
-def inicializaDicionario(arvore):
+def inicializaArvore(arvore):
     for i in range(256):
         arvore.insert_prefix(chr(i),i)
 
-def inicializaDicionarioInverso(arvore):
+def inicializaArvoreInvera(arvore):
     for i in range(256):
         arvore.insert_prefix(i,chr(i))
 
-def compressao(entrada,bitsMaximo,variavel):
+def compressao(entrada,bitsMaximo,variavel,teste):
+    
+    if teste:
+        taxas_compressao = []
+        numero_elementos_total = 0
+        numero_nos_total = 0
+        espaco_total = 0
+        tempo_total = 0
+        quantidade_caracteres = 1
+        start_time = time.time()  
+        
+    
     arvore = CompactBinaryTrie()
     if variavel:
         tamanhoAtual = 8
     else:
         tamanhoAtual = 12
     
-    inicializaDicionario(arvore)
+    inicializaArvore(arvore)
     
     posicao = 256
     StringProvisoria = entrada[0]
@@ -39,18 +51,16 @@ def compressao(entrada,bitsMaximo,variavel):
                 encoded.append(byte)
                 
             
-            if posicao < (2 ** bitsMaximo):
+            if (posicao) < (2 ** bitsMaximo):
                 if posicao >= (1 << tamanhoAtual) and tamanhoAtual < bitsMaximo:
                     tamanhoAtual += 1
                 arvore.insert_prefix(StringProvisoria+caractere,posicao)
                 posicao+=1
-            #else:
-                #dicionario.clear()
-                #tamanhoAtual = 8 if variavel else 12
-                #dicionario = inicializaDicionario(arvore)
-                #posicao = 256
 
             StringProvisoria = caractere
+        if teste:
+            quantidade_caracteres += 1
+            taxas_compressao.append(sys.getsizeof(entrada[:quantidade_caracteres])/(sys.getsizeof(bytes(encoded))))
     
     bit_buffer = (bit_buffer << tamanhoAtual) | arvore.search(StringProvisoria)
     bit_count += tamanhoAtual
@@ -64,17 +74,31 @@ def compressao(entrada,bitsMaximo,variavel):
         byte = (bit_buffer << (8 - bit_count)) & 0xFF
         encoded.append(byte)
 
-    return bytes(encoded)
+    if teste:
+        tempo_total = (time.time()  - start_time)
+        numero_nos_total,espaco_total,numero_elementos_total = arvore.get_tree_statistics()    
+        return bytes(encoded), taxas_compressao, tempo_total, numero_nos_total,espaco_total,numero_elementos_total
+    else:
+        return bytes(encoded)
 
-def descompressao(comprimido,bitsMaximo,variavel):
+def descompressao(comprimido,bitsMaximo,variavel,teste):
     if variavel:
         tamanhoAtual = 8
     else:
         tamanhoAtual = 12
         
+    if teste:
+        taxas_compressao = []
+        numero_elementos_total = 0
+        numero_nos_total = 0
+        espaco_total = 0
+        tempo_total = 0
+        quantidade_bytes = 1
+        start_time = time.time()  
+        
     arvore = CompactBinaryTrie()
     
-    inicializaDicionarioInverso(arvore)
+    inicializaArvoreInvera(arvore)
     
     StringProvisoria = ""
     StringSaida = StringProvisoria
@@ -89,7 +113,6 @@ def descompressao(comprimido,bitsMaximo,variavel):
         while bit_count >= tamanhoAtual:
             bit_count -= tamanhoAtual
             numero = (bit_buffer >> bit_count) & ((1 << tamanhoAtual) - 1)
-            #print(numero)
             entrada = ""
             if (arvore.search(numero) is not None):
                 entrada = arvore.search(numero)
@@ -103,45 +126,17 @@ def descompressao(comprimido,bitsMaximo,variavel):
                     posicao += 1
 
                 if posicao >= (1 << tamanhoAtual) and tamanhoAtual < bitsMaximo:
-                    tamanhoAtual += 1
-            #else
-                #print(dicionario)
-                #print(entrada)
-                #dicionario.clear()
-                #tamanhoAtual = 8 if variavel else 12
-                #dicionario = inicializaDicionarioInverso(arvore)
-                #posicao = 256                 
-        
+                    tamanhoAtual += 1     
+                   
             StringProvisoria = entrada
-    #print(dicionario)
-    return StringSaida
-
-entrada = sys.argv[1]      
-
-arquivo = open(entrada)
-texto = arquivo.read() 
-
-variavel = False
-
-if len(sys.argv) < 3 or not variavel:
-    bitsMaximo = 12
-else:
-    bitsMaximo =  int(sys.argv[2])
-
-comprimido = compressao(texto,bitsMaximo,variavel)
-
-print(f"Memória usada pelo original: {sys.getsizeof(texto)} bytes")
-
-print(f"Memória usada pelo comprimido: {sys.getsizeof(comprimido)} bytes")
-
-descomprimido = descompressao(comprimido,bitsMaximo,variavel)
-
-print("O arquivo descomprimido é igual ao original :", (descomprimido == texto))
-
-arquivo.close()
-
-#Você também deverá implementar uma opção de teste em que o programa
-#armazenará estatísticas da codificação/decodificação. Essas estatísticas deverão conter
-#a taxa de compressão ao longo do processamento dos arquivos, tamanho do dicionário
-#(número de elementos armazenados e espaço em memória), tempo total de execução,
-#e outras estatísticas que você julgar importantes. 
+        if teste:
+            quantidade_bytes += 1
+            taxas_compressao.append(sys.getsizeof(bytes(comprimido[:quantidade_bytes]))/(sys.getsizeof(StringSaida)))
+        
+    if teste:
+        tempo_total = (time.time()  - start_time)
+        numero_nos_total,espaco_total,numero_elementos_total = arvore.get_tree_statistics()    
+        return StringSaida, taxas_compressao, tempo_total, numero_nos_total,espaco_total,numero_elementos_total
+    else:
+        return StringSaida
+    
