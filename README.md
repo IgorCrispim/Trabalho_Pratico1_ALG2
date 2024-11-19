@@ -52,21 +52,21 @@ A trie é útil em cenários como compressão de dados ou aplicações de roteam
 ## **Lempel-Ziv-Welch**
 
 ### **Descrição**
-Implementação do algoritmo **LZW** para compressão e descompressão de arquivos, utilizando a Compact Binary Trie como base. Este algoritmo permite:
-- Reduzir o tamanho de arquivos por meio de codificação eficiente.
-- Reconstruir o texto original de arquivos comprimidos.
-- Gerar estatísticas detalhadas sobre compressão e descompressão.
+Implementação do algoritmo **LZW** para compressão e descompressão de arquivos, utilizando a Compact Binary Trie como dicionário para realizar inserção e busca dos elementos. Este algoritmo permite:
+- Reduzir o tamanho de arquivos por meio de codificação eficiente, utilizando códigos que indicam sequências de caracteres do texto para codifica-los e reduzir o espaço ocupado na memória com um conjunto de bits que o representa.
+- Reconstruir o texto original de arquivos comprimidos, utilizando um sistesma inverso da compressão ao a partir dos códigos chegar aos valores armazenados na arvore durante a compressão sem ter acesso a essa árvore.
+- Gerar estatísticas detalhadas sobre compressão e descompressão, como o tempo de execução e a variação da taxa de compressão durante o processo
 
 ---
 
 ### **Funcionalidades**
 1. **Compressão:**
-   - Codifica um arquivo de entrada utilizando uma Compact Binary Trie.
-   - Suporta tamanhos de dicionário fixos (até 12 bits) ou dinâmicos.
+   - Codifica um arquivo de entrada lendo caractere por caractere e gerando uma codificação para as sequencias de caracteres que se repetem no texto, permitindo a redução do espaço ocupado na memória
+   - A compressão pode ser realizada utilizando uma quantidade de bits dos códigos váriavel ou fixo. Nesse caso, quando é variável a quantidade de bits dos códigos irá variar conforme a necessidade do código entre 8 e a quantidade máxima de bits definida, enquanto na variável todos os códigos possuíram exatamente 12 bits. Caso não seja escolhida uma quantidade máxima de bits no caso variavel, será imposto que a quantidade máxima de bits será 12. 
 2. **Descompressão:**
-   - Decodifica o arquivo comprimido e reconstrói o texto original.
+   - Decodifica o arquivo comprimido e reconstrói o texto original baseado no arquivo binário de entrada. A decoficação é feita lendo cada código sequencialmente do arquivo de entrada e definindo qual string deveria representar aquela entrada de código, assim gerando o arquivo de saída descomprimido. Para funcionamento correto, deve-se enviar para a descompressão a mesma quantidade máxima de bits e o mesmo modo de armazenamente de bits (variável ou fixo), gerando erro caso isso não seja feito corretamente. 
 3. **Estatísticas:**
-   - Calcula a memória usada, a taxa de compressão e valida a integridade do arquivo.
+   - Caso o sistema esteja em modo de teste, ele irá calcular a variação da compressão do arquivo a cada caractere da string, memória usada na árvore, tempo total de execução e outras estatísticas úteis para a verificação da integradade da codificação. Os dados computados são tratados pelo sistema para gerar um gráfico sobre a variação da taxa de compressão e descompressão, além de uma tabela indicando as estatísticas finais mais importantes do processo de compressão ou descompressã
 
 ---
 
