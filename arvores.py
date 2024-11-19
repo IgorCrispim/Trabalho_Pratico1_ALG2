@@ -21,7 +21,7 @@ class CompactBinaryTrie:
         start_time = time.time()  
 
         node = self.root
-        binary_path = ''.join(self.char_to_binary(char) for char in prefix)
+        binary_path = ''.join(self.char_to_binary(char) for char in str(prefix))
 
         for bit in binary_path:
             if bit not in node.children:
@@ -32,7 +32,7 @@ class CompactBinaryTrie:
             node.is_end_of_prefix = True
             node.index = index  
 
-        self.prefix_list.append(prefix)
+        self.prefix_list.append(str(prefix))
         self.num_inserts += 1
 
         end_time = time.time()  
@@ -42,7 +42,7 @@ class CompactBinaryTrie:
         start_time = time.time()
 
         node = self.root
-        binary_path = ''.join(self.char_to_binary(char) for char in pattern)
+        binary_path = ''.join(self.char_to_binary(char) for char in str(pattern))
 
         for bit in binary_path:
             if bit not in node.children:
@@ -50,7 +50,7 @@ class CompactBinaryTrie:
             node = node.children[bit]
 
         end_time = time.time()
-        print(f"Tempo de busca para '{pattern}': {end_time - start_time:.6f} segundos")
+        #print(f"Tempo de busca para '{pattern}': {end_time - start_time:.6f} segundos")
         return node.index if node.is_end_of_prefix else None
 
     def display_prefixes(self):
@@ -110,39 +110,39 @@ class CompactBinaryTrie:
 
 
 # Lendo texto do arquivo
-def read_file(file_path):
-    with open(file_path, "r", encoding="utf-8") as file:
-        return file.read()
+#def read_file(file_path):
+    #with open(file_path, "r", encoding="utf-8") as file:
+        #return file.read()
 
 # Arquivo de texto
-file_path = "test.txt"
-text = read_file(file_path)
+#file_path = "test.txt"
+#text = read_file(file_path)
 
 # Criando a trie compacta em binário
-compact_binary_trie = CompactBinaryTrie()
+#compact_binary_trie = CompactBinaryTrie()
 
 # Inserindo prefixos com índices específicos
-compact_binary_trie.insert_prefix('Oi', 1)
-compact_binary_trie.insert_prefix('Oi sou', 2)
-compact_binary_trie.insert_prefix('Oi sou um', 3)
-compact_binary_trie.insert_prefix('Oi sou um teste', 4)
+#compact_binary_trie.insert_prefix('Oi', 1)
+#compact_binary_trie.insert_prefix('Oi sou', 2)
+#compact_binary_trie.insert_prefix('Oi sou um', 3)
+#compact_binary_trie.insert_prefix('Oi sou um teste', 4)
 
 # Exibindo os prefixos inseridos
-compact_binary_trie.display_prefixes()
+#compact_binary_trie.display_prefixes()
 
 # Testando busca
-print("\nResultados das buscas:")
-print(f"Buscando 'Oi': {compact_binary_trie.search('Oi')}")
-print(f"Buscando 'Oi sou': {compact_binary_trie.search('Oi sou')}")
-print(f"Buscando 'Oi sou um teste,': {compact_binary_trie.search('Oi sou um teste,')}")
+#print("\nResultados das buscas:")
+#print(f"Buscando 'Oi': {compact_binary_trie.search('Oi')}")
+#print(f"Buscando 'Oi sou': {compact_binary_trie.search('Oi sou')}")
+#print(f"Buscando 'Oi sou um teste,': {compact_binary_trie.search('Oi sou um teste,')}")
 
 # Exibindo as estatísticas da árvore
-compact_binary_trie.get_tree_statistics()
+#compact_binary_trie.get_tree_statistics()
 
 # Testando remoção
-print("\nRemovendo elementos:")
-compact_binary_trie.remove_by_index(1)
-compact_binary_trie.remove_by_index(3)
+#print("\nRemovendo elementos:")
+#compact_binary_trie.remove_by_index(1)
+#compact_binary_trie.remove_by_index(3)
 
 # Exibindo os prefixos após remoção
-compact_binary_trie.display_prefixes()
+#compact_binary_trie.display_prefixes()

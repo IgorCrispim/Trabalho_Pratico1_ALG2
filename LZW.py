@@ -1,28 +1,22 @@
 import sys
-from arvores import PrefixTrie
+from arvores import CompactBinaryTrie
 
 def inicializaDicionario(arvore):
-    dicionario = {}
     for i in range(256):
-        dicionario[chr(i)] = i
-        arvore.insert_prefix(chr(i))
-    return dicionario
+        arvore.insert_prefix(chr(i),i)
 
 def inicializaDicionarioInverso(arvore):
-    dicionario = {}
     for i in range(256):
-        dicionario[i] = chr(i)
-        arvore.insert_prefix(i)
-    return dicionario   
+        arvore.insert_prefix(i,chr(i))
 
 def compressao(entrada,bitsMaximo,variavel):
-    arvore = PrefixTrie(chr(0))
+    arvore = CompactBinaryTrie()
     if variavel:
         tamanhoAtual = 8
     else:
         tamanhoAtual = 12
-        
-    dicionario = inicializaDicionario(arvore)
+    
+    inicializaDicionario(arvore)
     
     posicao = 256
     StringProvisoria = entrada[0]
@@ -32,17 +26,12 @@ def compressao(entrada,bitsMaximo,variavel):
     bit_count = 0
 
     for caractere in entrada[1:]:
-        print(arvore.search(StringProvisoria + caractere))
-        print((StringProvisoria + caractere) in dicionario)
-        if (StringProvisoria + caractere) in dicionario:
+        if ((arvore.search(StringProvisoria + caractere)) is not None):
             StringProvisoria += caractere
         else:
             
-            bit_buffer = (bit_buffer << tamanhoAtual) | dicionario[StringProvisoria]
+            bit_buffer = (bit_buffer << tamanhoAtual) | arvore.search(StringProvisoria)
             bit_count += tamanhoAtual
-            
-            print(dicionario[StringProvisoria])
-            print(arvore.get_index(StringProvisoria))
             
             while bit_count >= 8:
                 bit_count -= 8
@@ -53,8 +42,7 @@ def compressao(entrada,bitsMaximo,variavel):
             if posicao < (2 ** bitsMaximo):
                 if posicao >= (1 << tamanhoAtual) and tamanhoAtual < bitsMaximo:
                     tamanhoAtual += 1
-                arvore.insert_prefix(StringProvisoria+caractere)
-                dicionario[StringProvisoria+caractere] = posicao
+                arvore.insert_prefix(StringProvisoria+caractere,posicao)
                 posicao+=1
             #else:
                 #dicionario.clear()
@@ -64,7 +52,7 @@ def compressao(entrada,bitsMaximo,variavel):
 
             StringProvisoria = caractere
     
-    bit_buffer = (bit_buffer << tamanhoAtual) | dicionario[StringProvisoria]
+    bit_buffer = (bit_buffer << tamanhoAtual) | arvore.search(StringProvisoria)
     bit_count += tamanhoAtual
     
     while bit_count >= 8:
@@ -84,9 +72,9 @@ def descompressao(comprimido,bitsMaximo,variavel):
     else:
         tamanhoAtual = 12
         
-    arvore = PrefixTrie(chr(0))
+    arvore = CompactBinaryTrie()
     
-    dicionario = inicializaDicionarioInverso(arvore)
+    inicializaDicionarioInverso(arvore)
     
     StringProvisoria = ""
     StringSaida = StringProvisoria
@@ -103,18 +91,15 @@ def descompressao(comprimido,bitsMaximo,variavel):
             numero = (bit_buffer >> bit_count) & ((1 << tamanhoAtual) - 1)
             #print(numero)
             entrada = ""
-            #print(arvore.search(codigo))
-            #print(codigo in dicionario)
-            if numero in dicionario:
-                entrada = dicionario[numero]
+            if (arvore.search(numero) is not None):
+                entrada = arvore.search(numero)
             else:
                 entrada = StringProvisoria + StringProvisoria[0]
             StringSaida+=entrada
-            #valor = arvore.insert_prefix(format(posicao, f'0{tamanhoAtual}b'))
             
-            if len(dicionario) < (1 << bitsMaximo):
+            if posicao < (2 ** bitsMaximo):
                 if StringProvisoria:
-                    dicionario[posicao] = StringProvisoria + entrada[0]
+                    arvore.insert_prefix(posicao,(StringProvisoria + entrada[0]))
                     posicao += 1
 
                 if posicao >= (1 << tamanhoAtual) and tamanhoAtual < bitsMaximo:
@@ -136,7 +121,7 @@ entrada = sys.argv[1]
 arquivo = open(entrada)
 texto = arquivo.read() 
 
-variavel = True
+variavel = False
 
 if len(sys.argv) < 3 or not variavel:
     bitsMaximo = 12
@@ -151,11 +136,9 @@ print(f"Memória usada pelo comprimido: {sys.getsizeof(comprimido)} bytes")
 
 descomprimido = descompressao(comprimido,bitsMaximo,variavel)
 
-print(descomprimido == texto)
+print("O arquivo descomprimido é igual ao original :", (descomprimido == texto))
 
 arquivo.close()
-
-print(descomprimido)
 
 #Você também deverá implementar uma opção de teste em que o programa
 #armazenará estatísticas da codificação/decodificação. Essas estatísticas deverão conter
