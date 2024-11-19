@@ -39,7 +39,6 @@ class CompactBinaryTrie:
         self.total_insertion_time += (end_time - start_time)
 
     def search(self, pattern):
-        start_time = time.time()
 
         node = self.root
         binary_path = ''.join(self.char_to_binary(char) for char in str(pattern))
@@ -49,7 +48,6 @@ class CompactBinaryTrie:
                 return None
             node = node.children[bit]
 
-        end_time = time.time()
         return node.index if node.is_end_of_prefix else None
 
     def display_prefixes(self):
@@ -69,7 +67,6 @@ class CompactBinaryTrie:
             return False
 
         binary_path = ''.join(self.char_to_binary(char) for char in prefix_to_remove)
-        print(f"Removendo prefixo no índice {index}: {prefix_to_remove} (caminho binário: {binary_path})")
         self._remove_from_trie(self.root, binary_path, 0)
         self.prefix_list[index] = None
         return True
@@ -92,10 +89,7 @@ class CompactBinaryTrie:
         # Calcula o número de nós e o espaço ocupado pela árvore
         num_nodes = self.count_nodes(self.root)
         space_usage = self.calculate_space_usage(self.root)
-        print(f"\nNúmero de nós na árvore: {num_nodes}")
-        print(f"Espaço estimado ocupado pela árvore: {space_usage / (1024):.2f} KB")
-        print(f"Número de prefixos armazenados: {self.num_inserts}")
-        print(f"Tempo total de inserção: {self.total_insertion_time:.6f} segundos")
+        return num_nodes,(space_usage / (1024)),self.num_inserts
 
     def count_nodes(self, node):
         # Conta o número de nós na árvore

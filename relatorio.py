@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 def geraRelatorio(taxas_compressao, tempo_total, numero_nos_total,espaco_total,numero_elementos_total, tamanho_inicial,nome_arquivo):
-    x = np.arange(1, tamanho_inicial + 1)
+    x = np.arange(0, len(taxas_compressao))
     table = {
         'Descrições': ['Quantidade de valores','Tempo de execução em segundos','Espaço gasto na árvore em kb','Numero total de nós','Numero de elementos adicionados'],
         'Estatísticas':[tamanho_inicial,f"{tempo_total:.2f}",f"{espaco_total:.2f}",numero_nos_total,numero_elementos_total]
