@@ -94,9 +94,9 @@
 
 ### **Como Usar**
 #### Executar Compressão:
-`python script.py arquivo.txt [bitsMaximo]`
-`arquivo.txt: Caminho do arquivo de texto a ser comprimido;`
-`bitsMaximo (opcional): Número máximo de bits do dicionário (padrão: 12).`
+`python script.py` arquivo.txt [bitsMaximo]
+`arquivo.txt`: Caminho do arquivo de texto a ser comprimido;
+`bitsMaximo` (opcional): Número máximo de bits do dicionário (padrão: 12).
 
 ### **Requisitos** 
 #### Python 3.8 ou superior
