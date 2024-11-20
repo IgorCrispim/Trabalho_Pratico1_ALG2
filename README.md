@@ -86,6 +86,18 @@ A trie é útil em cenários como compressão de dados ou aplicações de roteam
 
 ---
 
+
+## **Relatório**
+
+### **Descrição**
+
+Este projeto implementa uma script de relatório em Python, projetada para gerar automaticamente o Readme com as estatísticas geradas pelo teste. A estrutura suporta:
+- Criação de uma tabela com as estatísticas principais da compressão e descompressãol.
+- Criação do gráfico da taxa de compressão ao longo do tempo.
+- Geração de um arquivo markdown apresentado esses dados estatísticos.
+
+---
+
 ## **Como utilizar**
 
    Para executar o algoritmo será compilado o arquivo main.py adicionando os seguintes parametros na linha de comando:
@@ -104,6 +116,8 @@ Dado essa entrada, cada variável representa o seguinte conceito no programa
 - -t: A opção indica que o sitema funcionará em modo de teste, assim gerando valores de teste do algoritmo
 - -max_bits: Recebe a quantidade de bits máxima na compressão/descompressão. Caso não seja informado será utilizado o padrão que é 12 bits
 - -nome_arquivo: Recebe obrigatoriamente o nome do arquivo a ser descomprimido/comprimido. Caso não seja informada, o sistema indicará erro
+
+---
 
 ## **Análise dos Testes **
 
