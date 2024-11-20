@@ -62,7 +62,7 @@ A trie é útil em cenários como compressão de dados ou aplicações de roteam
 4. **Remoção:**
    - Remove um prefixo com base no índice.
 5. **Estatísticas:**
-   - Relata o número total de nós, espaço ocupado (em KB) e tempo de execução.
+   - Relata o número total de nós, espaço ocupado (em KB) e número de prefixos adicionado
 
 ---
 

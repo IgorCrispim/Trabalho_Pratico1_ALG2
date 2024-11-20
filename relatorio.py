@@ -35,7 +35,7 @@ def geraRelatorio(taxas_compressao, tempo_total, numero_nos_total,espaco_total,n
     
 ## Gráfico da taxa de compressão
     
-![Grafico da compressão]({saida})
+![Grafico da compressão](./{saida})
 
     """
     with open("Dados de teste/Relatorio de testes " + nome_arquivo + ".md", "a") as readme:
