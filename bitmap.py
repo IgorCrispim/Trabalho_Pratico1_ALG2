@@ -1,1 +1,0 @@
-. Além disso, observando o gráfico percebe-se ainda mais essa semelhança, já que os dois gráficos são basicamente iguais.
