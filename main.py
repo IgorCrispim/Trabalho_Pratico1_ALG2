@@ -2,21 +2,6 @@ import LZW
 import argparse
 import relatorio
 import os
-import bitmap
-
-def verificar_tipo_arquivo(file_path):
-    _, ext = os.path.splitext(file_path)
-    
-    tipos_suportados = {
-        '.txt': 'Arquivo de texto',
-        '.bmp': 'Imagem BMP'
-    }
-    
-    if ext.lower() in tipos_suportados:
-        return tipos_suportados[ext.lower()]
-    else:
-        raise ValueError(f"Tipo de arquivo não suportado: {ext}")
-    return ext
 
 def leituraParametros():
     parser = argparse.ArgumentParser()
@@ -27,6 +12,7 @@ def leituraParametros():
     parser.add_argument('-t', action='store_true', help="Indica que o sistema funcionará em modo de teste")
     parser.add_argument('max_bits', type=int, nargs='?', help="Tamanho máximo dos bits")
     parser.add_argument('nome_arquivo', type=str, help="Nome do arquivo a ser comprimido/descomprimido")
+    parser.add_argument('nome_arquivo_saida', type=str, nargs='?', help="Nome do arquivo descomprimido")
     args = parser.parse_args()
 
     if not (args.c or args.d):
@@ -49,11 +35,8 @@ def inicializaValores(args):
 
     entrada = args.nome_arquivo
     try:
-        if verificar_tipo_arquivo(entrada) is "txt":
-            with open(entrada, 'r' if compressao else 'rb') as arquivo:
-                texto = arquivo.read() if compressao else bytearray(arquivo.read())
-        else:
-            bitmap.binary_to_rgb_string()
+        with open(entrada, 'r' if compressao else 'rb') as arquivo:
+            texto = arquivo.read() if compressao else bytearray(arquivo.read())
     except FileNotFoundError:
         print(f"Erro: O arquivo '{entrada}' não foi encontrado.")
         exit(1)
