@@ -29,7 +29,6 @@ def compressao(entrada,bitsMaximo,variavel,teste):
         tamanhoAtual = 12
     
     inicializaArvore(arvore)
-    
     posicao = 256
     StringProvisoria = entrada[0]
     
@@ -41,8 +40,10 @@ def compressao(entrada,bitsMaximo,variavel,teste):
         if ((arvore.search(StringProvisoria + caractere)) is not None):
             StringProvisoria += caractere
         else:
-            
-            bit_buffer = (bit_buffer << tamanhoAtual) | arvore.search(StringProvisoria)
+            index = arvore.search(StringProvisoria)
+            if index is None:
+                index = 32
+            bit_buffer = (bit_buffer << tamanhoAtual) | index
             bit_count += tamanhoAtual
             
             while bit_count >= 8:
@@ -62,7 +63,10 @@ def compressao(entrada,bitsMaximo,variavel,teste):
             quantidade_caracteres += 1
             taxas_compressao.append(sys.getsizeof(entrada[:quantidade_caracteres])/(sys.getsizeof(bytes(encoded))))
     
-    bit_buffer = (bit_buffer << tamanhoAtual) | arvore.search(StringProvisoria)
+    index = arvore.search(StringProvisoria)
+    if index is None:
+        index = 32  
+    bit_buffer = (bit_buffer << tamanhoAtual) | index
     bit_count += tamanhoAtual
     
     while bit_count >= 8:
@@ -93,7 +97,7 @@ def descompressao(comprimido,bitsMaximo,variavel,teste):
         numero_nos_total = 0
         espaco_total = 0
         tempo_total = 0
-        quantidade_bytes = 1
+        quantidade_bytes = 0
         start_time = time.time()  
         
     arvore = CompactBinaryTrie()
