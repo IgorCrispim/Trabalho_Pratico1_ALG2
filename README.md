@@ -28,6 +28,7 @@ Implementação do algoritmo **LZW** para compressão e descompressão de arquiv
 
 ### **Decisões de projeto**
 - Na implementação da compressão e descompressão limitada pela quantidade de bits começa a existir um problema quando é criado um novo código no qual precisaria de uma quantidade de bits maior que o máximo estabelecido. Nesse caso, foi decidido que o programa pararia de adicionar novas cadeias ao dicionário, assim comprimindo o resto do arquivo com a árvore criada até o momento sem inserir novas cadeias.
+- Na implementação da compressão exista um problema gerado por valores da string original que não estavam na tabela ASCII, assim gerando erro. Por isso, foi escolhido substituir qualquer valor fora da tabela ASCII como " ", assim permitindo a compressão correta dos valores.
 
 ### **Saída dos arquivos**
 
@@ -85,9 +86,22 @@ A trie é útil em cenários como compressão de dados ou aplicações de roteam
 
 ---
 
+
+## **Relatório**
+
+### **Descrição**
+
+Este projeto implementa uma script de relatório em Python, projetada para gerar automaticamente o Readme com as estatísticas geradas pelo teste. A estrutura suporta:
+- Criação de uma tabela com as estatísticas principais da compressão e descompressãol.
+- Criação do gráfico da taxa de compressão ao longo do tempo.
+- Geração de um arquivo markdown apresentado esses dados estatísticos.
+
+---
+
 ## **Como utilizar**
 
    Para executar o algoritmo será compilado o arquivo main.py adicionando os seguintes parametros na linha de comando:
+
 '''python
 main.py [-h] [-c] [-d] [-v] [-f] [-t] [max_bits] nome_arquivo
 '''
@@ -103,7 +117,42 @@ Dado essa entrada, cada variável representa o seguinte conceito no programa
 - -max_bits: Recebe a quantidade de bits máxima na compressão/descompressão. Caso não seja informado será utilizado o padrão que é 12 bits
 - -nome_arquivo: Recebe obrigatoriamente o nome do arquivo a ser descomprimido/comprimido. Caso não seja informada, o sistema indicará erro
 
+---
+
 ## **Análise dos Testes **
 
    Dado o programa funcional foi realizado alguns testes em diferentes tipos de arquivo para demonstrar o funcionamento e a qualidade do algoritmo de compressão. A cada teste um script automático adiciona os dados analisados no Readme, gerando os testes representados nos relatórios da pasta "Dados de Teste". Dado os dados de teste, foi possível fazer a seguinte análise sobre o funciomento do programa:
 
+### **Compressão e descompressão de Livro em txt com bit variavel de 12**
+
+   Como primeiro teste foi analisado o funcionamento da compressão e descompressão em arquivos de texto. Para isso, foi pego um livro no site do [Projeto Gutenberg](https://www.gutenberg.org/cache/epub/52847/pg52847-images.html). Baixando o arquivo em txt e analisando via teste com 12 bits variável foi possível chegar aos resultados do [relatorio gerado](Dados_teste/Relatorio_de_testes_Compressao_variavel_12_livro.md)
+
+   Observando os dados, percebe-se pelas estatísticas que a compressão funcionou bem, fazendo a compressão de um livro de tamanho extenso em 17 segundos e ocupando pouco espaço utilizando o dicionário. Além disso, observa-se pelo grafico que a taxa de compressão esteve alta durante toda a compressão do texto, gerando no final uma taxa de compressão ótimo de 4, indicando que o arquivo compactado ficou 4 vezes menor que o arquivo original
+
+   Dado o arquivo comprimido gerado pelo livro, foi realizado a descompressão do arquivo com o mesmo máximo de bits e também variável, chegando aos resultados do [relatorio criado](Dados_teste/Relatorio_de_testes_Descompressao_variavel_12_livro.md)
+
+   Analisando as estastísticas de descompressão é possível perceber que a descompressão foi eficiente, gerando o arquivo descomprimido em menos de 10 segundos, ocupando bem menos espaço no dicionário comparado com a compressão. Além disso, analisando o gráfico percebe-se que em relação a taxa de compressão ela diminui consideravelmente, já que ele retorna o valor ao formato original em caractere e perde as características de compressão. 
+
+### **Compressão e descompressão de Livro em txt com bit variavel de 9**
+
+   Dado o mesmo arquivo de livro utilizado na primeira análise, foi feito uma nova execução com uma quantidade de bits máxima menor para testar a eficiência da compressão com menos bits, chegando aos resultados representados no [relatorio criado](Dados_teste/Relatorio_de_testes_Compressao_variavel_9_livro.md)
+
+   Observando os dados e comparando com a compressão anterior é possivel perceber que a compressão teve um desempenho menos eficiente comparado com a primeira compressão, apresentando um tempo de compressão de 26 segundos, mas economiza muito em relação ao espaço gasto pela árvore. Além disso, verica-se que a limitação está funcionando por limitar o número de elementos adicionados em 512, sendo esse a quantidade máxima de valores permitido definido pela quantidade máxima de bits. Em relação ao gráfico, observa-se que a compressão teve um desempenho estritamente pior que a compressão com 12 bits, gerando uma taxa de compressão de apenas 2.7.
+
+   Dado o arquivo comprimido gerado pelo livro, foi realizado a descompressão do arquivo com o mesmo máximo de bits e também variável, chegando aos resultados do [relatorio criado](Dados_teste/Relatorio_de_testes_Descompressao_variavel_9_livro.md)   
+
+   Observando as estatísticas da descompressão percebe-se que a descompressão também é afetada pela diminuição do máximo de bits, obtendo um desempenho menor comparado com a descompressão de 12 bits de 20 segundos, mas economiza muito em relação ao espaço gasto pela árvore. Em relação ao gráfico, observa-se que a compressão teve um desempenho maior, já que a taxa de compressão ao passar o arquivo foi baixa.
+
+### **Compressão e descompressão de Livro em txt com bit fixo**
+
+   Considerando que a quantidade de bits pode ser variável ou fixa, foi feito uma nova execução para a taxa com o tamanho máximo de bits padrão de 12 para verificar a diferença estatística para a compressão variável, chegando aos arquivos presentes no [relatorio gerado](Dados_teste/Relatorio_de_testes_Compressao_fixa_12_livro.md)
+
+   Observando os dados e comparando com a compressão variável é possivel perceber que os dois métodos geraram estatísticas parecidas, indicando a proximidade do tipo de compressão nos dois casos. Por isso, o tempo gasto em segundos e o espaço ocupado nos dois casos foi basicamente igual. Além disso, observando o gráfico percebe-se ainda mais essa semelhança, já que os dois gráficos são basicamente iguais.
+
+   Dado o arquivo comprimido gerado pelo livro, foi realizado a descompressão do arquivo com o mesmo máximo de bits e também fixa, chegando aos resultados do [relatorio criado](Dados_teste/Relatorio_de_testes_Descompressao_fixa_12_livro.md)  
+
+   Observando as estatísticas da descompressão percebe-se que a descompressão também é pouco afetada pela mudança de variável para fixo, porém nesse caso existe uma pequena diferença devido ao tamanho dos bytes do codigo. Por isso, observa-se que teve um desempenho minimamente diferente na quantidade de valores, já que a opção fixa faz tratar mais bytes devido a diminuição de bytes necessário que a compressão faz. Além disso, observando o gráfico percebe-se que realmente são bem parecidos, possuindo apenas uma pequena diferença no inicio devido ao período em que a utilização variável teria bits menores.
+
+## Problemas na implementação
+
+-Não foi possível realizar a compressão de arquivos que não sejam arquivos de texto, assim o programa funciona apenas caso seja inserido arquivos de texto
