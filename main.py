@@ -17,6 +17,9 @@ def leituraParametros():
     if not (args.c or args.d):
         parser.error("Você deve especificar -c para compressão ou -d para descompressão.")
     
+    if not (args.v or args.f):
+        parser.error("Você deve especificar -f para fixo ou -v para variavel.")
+    
     return args
 
 def inicializaValores(args):
@@ -24,9 +27,9 @@ def inicializaValores(args):
     variavel = args.v
     teste = args.t
     bitsMaximo = args.max_bits if args.max_bits and variavel else 12
-
-    if bitsMaximo < 9 or bitsMaximo > 16:
-        print("Erro: O número de bits deve estar entre 9 e 16.")
+    
+    if bitsMaximo < 8 or bitsMaximo > 16:
+        print("Erro: O número de bits deve estar entre 8 e 16.")
         exit(1)
 
     entrada = args.nome_arquivo
@@ -55,9 +58,9 @@ if __name__ == '__main__':
             comprimido, taxas_compressao, tempo_total, numero_nos_total, espaco_total, numero_elementos_total = LZW.compressao(
                 texto, bitsMaximo, variavel, teste)
             if variavel:
-                relatorio.geraRelatorio(taxas_compressao, tempo_total, numero_nos_total, espaco_total, numero_elementos_total, len(texto), "Compressao variavel - " + nome_arquivo)
+                relatorio.geraRelatorio(taxas_compressao, tempo_total, numero_nos_total, espaco_total, numero_elementos_total, len(texto), "Compressao variavel "+ str(bitsMaximo) +" - " + nome_arquivo)
             else:
-                relatorio.geraRelatorio(taxas_compressao, tempo_total, numero_nos_total, espaco_total, numero_elementos_total, len(texto), "Compressao fixa - " + nome_arquivo)
+                relatorio.geraRelatorio(taxas_compressao, tempo_total, numero_nos_total, espaco_total, numero_elementos_total, len(texto), "Compressao fixa "+ str(bitsMaximo) +" - " + nome_arquivo)
         else:
             comprimido = LZW.compressao(texto, bitsMaximo, variavel, teste)
         with open(f"Arquivos comprimidos/{nome_arquivo}.bin", "wb") as arquivo:
