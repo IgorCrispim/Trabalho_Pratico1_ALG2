@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 def geraRelatorio(taxas_compressao, tempo_total, numero_nos_total,espaco_total,numero_elementos_total, tamanho_inicial,nome_arquivo):
+    nome_arquivo = nome_arquivo.replace(" ", "_")
     x = np.arange(0, len(taxas_compressao))
 
     descricoes = ['Quantidade de valores','Tempo de execução em segundos','Espaço gasto na árvore em kb','Numero total de nós','Numero de elementos adicionados', 'Taxa final de compressão/descompressão']
@@ -13,8 +14,8 @@ def geraRelatorio(taxas_compressao, tempo_total, numero_nos_total,espaco_total,n
     plt.xlabel('Numero de bytes')
     plt.ylabel('Taxa de compressão')
     
-    saida = 'Grafico ' + nome_arquivo + '.png'
-    repositorio = "Dados de teste/"
+    saida = 'Grafico_' + nome_arquivo +'.png'
+    repositorio = "Dados_teste/"
     
     plt.savefig(repositorio + saida, format='png')
     plt.close() 
@@ -38,5 +39,5 @@ def geraRelatorio(taxas_compressao, tempo_total, numero_nos_total,espaco_total,n
 ![Grafico da compressão](./{saida})
 
     """
-    with open("Dados de teste/Relatorio de testes " + nome_arquivo + ".md", "a") as readme:
+    with open(repositorio +"Relatorio de testes " + nome_arquivo + ".md", "a") as readme:
         readme.write(markdown)
